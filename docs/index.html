@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+  <title>TriLog</title>
+  <meta name="description" content="Trainings-Tracker für Triathlon und Kraftsport">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TriLog">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <section class="page" id="page-dashboard"></section>
+    <section class="page" id="page-plan"></section>
+    <section class="page" id="page-log"></section>
+    <section class="page" id="page-strength"></section>
+    <section class="page" id="page-competitions"></section>
+
+    <nav class="tabbar" id="tabbar">
+      <button class="tab-item active" data-page="dashboard"></button>
+      <button class="tab-item" data-page="plan"></button>
+      <button class="tab-item" data-page="log"></button>
+      <button class="tab-item" data-page="strength"></button>
+      <button class="tab-item" data-page="competitions"></button>
+    </nav>
+  </div>
+
+  <div id="overlays"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
