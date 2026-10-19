@@ -1,0 +1,5 @@
+.DS_Store
+TriLogDerivedData/
+**/.swiftpm/xcode/
+**/.swiftpm/configuration/
+*.xcuserstate
