@@ -3,3 +3,5 @@ TriLogDerivedData/
 **/.swiftpm/xcode/
 **/.swiftpm/configuration/
 *.xcuserstate
+
+garmin-connector/__pycache__/
