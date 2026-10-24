@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trilog-v1';
+const CACHE_NAME = 'trilog-v2';
 const PRECACHE_URLS = [
   './',
   'index.html',
@@ -10,6 +10,7 @@ const PRECACHE_URLS = [
   'js/icons.js',
   'js/ui.js',
   'js/tcx.js',
+  'js/intervals.js',
   'js/dashboard.js',
   'js/log.js',
   'js/strength.js',
@@ -37,6 +38,8 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // Fremde Adressen (z. B. intervals.icu-API) nie zwischenspeichern, sonst erscheinen alte Daten.
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)

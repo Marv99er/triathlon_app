@@ -1,4 +1,6 @@
 import { el } from './utils.js';
+import { showToast } from './ui.js';
+import { syncIntervals } from './intervals.js';
 import { icon } from './icons.js';
 import { applyStoredTheme } from './settings.js';
 import { renderDashboardPage } from './dashboard.js';
@@ -46,6 +48,19 @@ setStrengthDataChanged(refreshActivePage);
 setCompetitionsDataChanged(refreshActivePage);
 
 showPage('dashboard');
+
+// Garmin-Abgleich beim Öffnen und beim Zurückkehren in die App; leise, außer bei falschem Schlüssel.
+async function syncGarmin() {
+  try {
+    const { changed } = await syncIntervals();
+    if (changed) refreshActivePage();
+  } catch (e) {
+    if (e.message === 'auth') showToast('Garmin-Abgleich: API-Schlüssel ungültig');
+  }
+}
+window.addEventListener('trilog-data-changed', refreshActivePage);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') syncGarmin(); });
+syncGarmin();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

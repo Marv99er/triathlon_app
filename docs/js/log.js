@@ -3,6 +3,7 @@ import { icon } from './icons.js';
 import { openSheet, showActionMenu, showConfirm, showToast } from './ui.js';
 import { db, uuid } from './db.js';
 import { parseTCX } from './tcx.js';
+import { ignoreIntervalsActivity } from './intervals.js';
 
 let onDataChanged = () => {};
 export function setOnDataChanged(fn) { onDataChanged = fn; }
@@ -206,6 +207,7 @@ export function openWorkoutDetail(workout) {
       if (workout.avgHeartRate) rows.push(['Ø Herzfrequenz', `${workout.avgHeartRate} bpm`]);
       if (workout.maxHeartRate) rows.push(['Max. Herzfrequenz', `${workout.maxHeartRate} bpm`]);
       if (workout.rpe) rows.push(['Anstrengung (RPE)', `${workout.rpe}/10`]);
+      if (workout.intervalsId) rows.push(['Quelle', 'Garmin Connect']);
 
       s.body.append(
         el('div', { class: 'card', style: 'display:flex;align-items:center;justify-content:space-between;margin-bottom:16px' }, [
@@ -243,6 +245,7 @@ export function openWorkoutDetail(workout) {
           onclick: () => showConfirm({
             title: 'Training wirklich löschen?',
             actions: [{ label: 'Löschen', destructive: true, onClick: async () => {
+              ignoreIntervalsActivity(workout.intervalsId);
               await db.delete('workouts', workout.id);
               onDataChanged();
               s.close();
