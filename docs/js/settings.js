@@ -2,6 +2,7 @@ import { el } from './utils.js';
 import { icon } from './icons.js';
 import { openSheet, showToast, showConfirm } from './ui.js';
 import { db } from './db.js';
+import { getApiKey, setApiKey, syncIntervals } from './intervals.js';
 
 const MODES = [
   { id: 'system', label: 'System' },
@@ -52,9 +53,34 @@ export function openSettingsSheet() {
         el('span', { html: icon('upload', { size: 18 }) }), 'Daten importieren',
       ]);
 
+      // type=text, damit das App-Stylesheet greift; die Zeichen werden trotzdem verdeckt angezeigt.
+      const keyInput = el('input', {
+        type: 'text', placeholder: 'API-Schlüssel einfügen', value: getApiKey(),
+        autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', style: '-webkit-text-security:disc',
+      });
+      keyInput.addEventListener('change', () => setApiKey(keyInput.value));
+      const syncBtn = el('button', { class: 'btn btn-secondary btn-block', onclick: async () => {
+        setApiKey(keyInput.value);
+        if (!getApiKey()) { showToast('Bitte zuerst den API-Schlüssel eintragen'); return; }
+        try {
+          const { changed } = await syncIntervals({ force: true });
+          showToast(changed ? `${changed} Training${changed === 1 ? '' : 'e'} übernommen` : 'Alles aktuell');
+          if (changed) window.dispatchEvent(new Event('trilog-data-changed'));
+        } catch (e) {
+          showToast(e.message === 'auth' ? 'API-Schlüssel ungültig' : 'Abgleich fehlgeschlagen (Netzwerk?)');
+        }
+      } }, 'Jetzt abgleichen');
+
       sheet.body.append(
         el('div', { class: 'section-title' }, 'Erscheinungsbild'),
         el('div', { class: 'form-group' }, radioList),
+        el('div', { class: 'section-title', style: 'margin-top:24px' }, 'Garmin (über intervals.icu)'),
+        el('div', { class: 'card', style: 'display:flex;flex-direction:column;gap:10px' }, [
+          el('p', { class: 'text-secondary', style: 'margin:0;font-size:13px' },
+            'Läufe, Radfahrten und Schwimmeinheiten (letzte 30 Tage) werden beim Öffnen automatisch übernommen. Der Schlüssel bleibt nur auf diesem Gerät.'),
+          el('div', { class: 'form-group' }, el('div', { class: 'form-row align-left' }, keyInput)),
+          syncBtn,
+        ]),
         el('div', { class: 'section-title', style: 'margin-top:24px' }, 'Daten'),
         el('div', { class: 'card', style: 'display:flex;flex-direction:column;gap:10px' }, [
           el('p', { class: 'text-secondary', style: 'margin:0;font-size:13px' },
