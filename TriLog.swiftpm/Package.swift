@@ -12,7 +12,7 @@ let package = Package(
         .iOSApplication(
             name: "TriLog",
             targets: ["TriLog"],
-            bundleIdentifier: "com.marvingehrlein.trilog",
+            bundleIdentifier: "Marv99er.trilog",
             teamIdentifier: nil,
             displayVersion: "1.0",
             bundleVersion: "1",
