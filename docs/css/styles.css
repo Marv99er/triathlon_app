@@ -425,7 +425,6 @@ select { -webkit-appearance: none; appearance: none; text-align: right; directio
 }
 
 .set-row input { flex: 1; text-align: left; font-weight: 600; background: var(--control-bg); border-radius: 8px; padding: 6px 8px; }
-.set-row input.carried-over { opacity: 0.4; }
 
 .kebab-menu { position: relative; flex: none; }
 .kebab-btn { background: none; border: none; color: var(--text-secondary); padding: 4px; cursor: pointer; display: flex; }

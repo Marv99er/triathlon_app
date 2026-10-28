@@ -93,7 +93,7 @@ export function endOfMonth(date) {
 
 export function exerciseSummary(exercise) {
   return exercise.sets
-    .map(set => (set.weightKg != null ? `${set.reps}×${formatNumber(set.weightKg, 0, 1)}kg` : `${set.reps}×`))
+    .map(set => (set.weightKg != null ? `${set.reps ?? '–'}×${formatNumber(set.weightKg, 0, 1)}kg` : `${set.reps ?? '–'}×`))
     .join(', ');
 }
 

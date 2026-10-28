@@ -150,6 +150,12 @@ function openRoutineEditor({ existingRoutine, prefillWeekday }) {
 
 // ---------- Krafttraining-Formular ----------
 
+// ghost = Werte vom letzten Mal (nur als Platzhalter). Eine Ghost-Zeile zählt erst, wenn darin getippt wurde (active);
+// dann wird der Ghost-Wert des anderen Feldes übernommen (adopted).
+function newSet({ weightKg = null, reps = null, ghost = null } = {}) {
+  return { id: uuid(), weightKg, reps, ghost, active: false, adopted: { weight: false, reps: false } };
+}
+
 export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }) {
   const isEditing = !!existingWorkout;
   let sessionName = existingWorkout?.routineName || repeatFrom?.routineName || routine?.name || '';
@@ -172,20 +178,20 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
   if (existingWorkout) {
     exercises = [...existingWorkout.strengthExercises].sort((a, b) => a.order - b.order).map(ex => ({
       id: uuid(), name: ex.name, notes: ex.notes || '',
-      sets: ex.sets.map(s => ({ id: uuid(), weightKg: s.weightKg ?? null, reps: s.reps, carried: false })),
+      sets: ex.sets.map(s => newSet({ weightKg: s.weightKg ?? null, reps: s.reps ?? null })),
     }));
   } else if (repeatFrom) {
     exercises = [...repeatFrom.strengthExercises].sort((a, b) => a.order - b.order).map(ex => ({
       id: uuid(), name: ex.name, notes: '',
-      sets: ex.sets.map(s => ({ id: uuid(), weightKg: s.weightKg ?? null, reps: s.reps, carried: true })),
+      sets: ex.sets.map(s => newSet({ ghost: { weightKg: s.weightKg ?? null, reps: s.reps ?? null } })),
     }));
   } else if (routine && routine.exerciseNames.length) {
     exercises = routine.exerciseNames.map(name => ({
       id: uuid(), name, notes: '',
-      sets: [0, 1, 2].map(() => ({ id: uuid(), weightKg: null, reps: 10, carried: false })),
+      sets: [0, 1, 2].map(() => newSet()),
     }));
   } else {
-    exercises = [{ id: uuid(), name: '', notes: '', sets: [0, 1, 2].map(() => ({ id: uuid(), weightKg: null, reps: 10, carried: false })) }];
+    exercises = [{ id: uuid(), name: '', notes: '', sets: [0, 1, 2].map(() => newSet()) }];
   }
 
   const allWorkoutsPromise = db.getAll('workouts');
@@ -246,11 +252,30 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
             el('span', { class: 'idx-spacer' }), el('span', {}, 'Gewicht'), el('span', {}, 'Wdh.'), el('span', { class: 'menu-spacer' }),
           ]));
           ex.sets.forEach((set, si) => {
-            const weightInput = el('input', { type: 'number', step: '0.5', placeholder: 'kg', value: set.weightKg ?? '' });
-            const repsInput = el('input', { type: 'number', placeholder: 'Wdh.', value: set.reps });
-            if (set.carried) { weightInput.classList.add('carried-over'); repsInput.classList.add('carried-over'); }
-            weightInput.addEventListener('input', () => { set.weightKg = weightInput.value ? parseFloat(weightInput.value) : null; set.carried = false; weightInput.classList.remove('carried-over'); });
-            repsInput.addEventListener('input', () => { set.reps = parseInt(repsInput.value, 10) || 0; set.carried = false; repsInput.classList.remove('carried-over'); });
+            const ghost = set.ghost;
+            const weightInput = el('input', { type: 'number', step: '0.5', placeholder: ghost?.weightKg != null ? String(ghost.weightKg) : 'kg', value: set.weightKg ?? '' });
+            const repsInput = el('input', { type: 'number', placeholder: ghost?.reps != null ? String(ghost.reps) : 'Wdh.', value: set.reps ?? '' });
+            const onSetInput = (field) => {
+              set.adopted[field] = false;
+              if (ghost) {
+                const typed = (!set.adopted.weight && weightInput.value) || (!set.adopted.reps && repsInput.value);
+                if (!typed) {
+                  // Eigene Eingaben gelöscht -> Zeile wird wieder zum reinen Vorschlag
+                  weightInput.value = '';
+                  repsInput.value = '';
+                  set.active = false;
+                  set.adopted = { weight: false, reps: false };
+                } else if (!set.active) {
+                  set.active = true;
+                  if (field === 'reps' && !weightInput.value && ghost.weightKg != null) { weightInput.value = ghost.weightKg; set.adopted.weight = true; }
+                  if (field === 'weight' && !repsInput.value && ghost.reps != null) { repsInput.value = ghost.reps; set.adopted.reps = true; }
+                }
+              }
+              set.weightKg = weightInput.value ? parseFloat(weightInput.value) : null;
+              set.reps = repsInput.value ? parseInt(repsInput.value, 10) : null;
+            };
+            weightInput.addEventListener('input', () => onSetInput('weight'));
+            repsInput.addEventListener('input', () => onSetInput('reps'));
 
             const setMenuBtn = el('button', { class: 'icon-btn', html: icon('ellipsis', { size: 16 }) });
             setMenuBtn.addEventListener('click', () => {
@@ -265,7 +290,7 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
         }
         renderSets();
 
-        const addSetBtn = el('button', { class: 'btn-plain', onclick: () => { ex.sets.push({ id: uuid(), weightKg: null, reps: 10, carried: false }); renderSets(); } }, [
+        const addSetBtn = el('button', { class: 'btn-plain', onclick: () => { ex.sets.push(newSet()); renderSets(); } }, [
           el('span', { html: icon('plus', { size: 14 }) }), ' Satz hinzufügen',
         ]);
 
@@ -287,7 +312,7 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
       renderAll();
 
       const addExerciseBtn = el('button', { class: 'btn btn-secondary btn-block', onclick: () => {
-        exercises.push({ id: uuid(), name: '', notes: '', sets: [0, 1, 2].map(() => ({ id: uuid(), weightKg: null, reps: 10, carried: false })) });
+        exercises.push({ id: uuid(), name: '', notes: '', sets: [0, 1, 2].map(() => newSet()) });
         renderAll();
       } }, [el('span', { html: icon('plus', { size: 16 }) }), 'Übung hinzufügen']);
 
@@ -329,10 +354,16 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
         workout.avgHeartRate = null;
         workout.maxHeartRate = null;
         workout.strengthExercises = exercises
-          .filter(ex => ex.name.trim())
-          .map((ex, index) => ({
-            id: ex.id, name: ex.name.trim(), notes: ex.notes.trim() || null, order: index,
-            sets: ex.sets.map(s => ({ weightKg: s.weightKg, reps: s.reps })),
+          .map(ex => ({
+            ex,
+            // Unberührte Vorschläge und komplett leere Sätze werden nicht gespeichert
+            sets: ex.sets
+              .filter(s => (!s.ghost || s.active) && (s.weightKg != null || s.reps != null))
+              .map(s => ({ weightKg: s.weightKg, reps: s.reps })),
+          }))
+          .filter(({ ex, sets }) => ex.name.trim() && sets.length)
+          .map(({ ex, sets }, index) => ({
+            id: ex.id, name: ex.name.trim(), notes: ex.notes.trim() || null, order: index, sets,
           }));
 
         await db.put('workouts', workout);
