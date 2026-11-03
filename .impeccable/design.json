@@ -1,0 +1,624 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T19:07:49.142Z",
+  "title": "Design System: TriLog",
+  "extensions": {
+    "colorMeta": {
+      "mat": {
+        "role": "neutral",
+        "displayName": "Rubber Mat",
+        "canonical": "#111315",
+        "oklch": "oklch(18.5% 0.005 248.1)",
+        "light": "#E6E8EA",
+        "purpose": "Page, nav bar, tab bar and sheet ground.",
+        "cssVar": "--bg",
+        "tonalRamp": [
+          "oklch(15% 0.003 248.1)",
+          "oklch(26% 0.004 248.1)",
+          "oklch(37% 0.005 248.1)",
+          "oklch(48% 0.005 248.1)",
+          "oklch(60% 0.005 248.1)",
+          "oklch(72% 0.005 248.1)",
+          "oklch(84% 0.003 248.1)",
+          "oklch(95% 0.001 248.1)"
+        ]
+      },
+      "plate": {
+        "role": "neutral",
+        "displayName": "Plate",
+        "canonical": "#1B1E21",
+        "oklch": "oklch(23.3% 0.007 248.1)",
+        "light": "#FFFFFF",
+        "purpose": "Cards, lists, form groups, rack, results.",
+        "cssVar": "--bg-card",
+        "tonalRamp": [
+          "oklch(15% 0.004 248.1)",
+          "oklch(26% 0.006 248.1)",
+          "oklch(37% 0.007 248.1)",
+          "oklch(48% 0.007 248.1)",
+          "oklch(60% 0.007 248.1)",
+          "oklch(72% 0.007 248.1)",
+          "oklch(84% 0.004 248.1)",
+          "oklch(95% 0.002 248.1)"
+        ]
+      },
+      "plate-raised": {
+        "role": "neutral",
+        "displayName": "Raised Plate",
+        "canonical": "#24282C",
+        "oklch": "oklch(27.4% 0.009 248.2)",
+        "light": "#FFFFFF",
+        "purpose": "Floating menus, toast, confirm dialog.",
+        "cssVar": "--bg-elevated",
+        "tonalRamp": [
+          "oklch(15% 0.005 248.2)",
+          "oklch(26% 0.008 248.2)",
+          "oklch(37% 0.009 248.2)",
+          "oklch(48% 0.009 248.2)",
+          "oklch(60% 0.009 248.2)",
+          "oklch(72% 0.008 248.2)",
+          "oklch(84% 0.006 248.2)",
+          "oklch(95% 0.002 248.2)"
+        ]
+      },
+      "control": {
+        "role": "neutral",
+        "displayName": "Control",
+        "canonical": "#2A2E33",
+        "oklch": "oklch(29.9% 0.011 254)",
+        "light": "#DEE1E5",
+        "purpose": "Secondary buttons, inputs inside cards, rack-number tags, pressed rows.",
+        "cssVar": "--control-bg",
+        "tonalRamp": [
+          "oklch(15% 0.006 254)",
+          "oklch(26% 0.009 254)",
+          "oklch(37% 0.011 254)",
+          "oklch(48% 0.011 254)",
+          "oklch(60% 0.011 254)",
+          "oklch(72% 0.009 254)",
+          "oklch(84% 0.006 254)",
+          "oklch(95% 0.002 254)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#2E3338",
+        "oklch": "oklch(31.8% 0.011 248.2)",
+        "light": "#D3D7DB",
+        "purpose": "1px separators and bar borders.",
+        "cssVar": "--separator",
+        "tonalRamp": [
+          "oklch(15% 0.006 248.2)",
+          "oklch(26% 0.01 248.2)",
+          "oklch(37% 0.011 248.2)",
+          "oklch(48% 0.011 248.2)",
+          "oklch(60% 0.011 248.2)",
+          "oklch(72% 0.01 248.2)",
+          "oklch(84% 0.007 248.2)",
+          "oklch(95% 0.002 248.2)"
+        ]
+      },
+      "rail": {
+        "role": "neutral",
+        "displayName": "Rack Rail",
+        "canonical": "#3A4046",
+        "oklch": "oklch(36.8% 0.013 248.2)",
+        "light": "#B9BEC4",
+        "purpose": "Rack bar and hooks, future-day rings, scrollbar.",
+        "cssVar": "--rail",
+        "tonalRamp": [
+          "oklch(15% 0.007 248.2)",
+          "oklch(26% 0.011 248.2)",
+          "oklch(37% 0.013 248.2)",
+          "oklch(48% 0.013 248.2)",
+          "oklch(60% 0.013 248.2)",
+          "oklch(72% 0.012 248.2)",
+          "oklch(84% 0.008 248.2)",
+          "oklch(95% 0.003 248.2)"
+        ]
+      },
+      "chalk": {
+        "role": "neutral",
+        "displayName": "Chalk",
+        "canonical": "#F2F1EC",
+        "oklch": "oklch(95.8% 0.007 97.4)",
+        "light": "#15171A",
+        "purpose": "Primary text.",
+        "cssVar": "--text",
+        "tonalRamp": [
+          "oklch(15% 0.004 97.4)",
+          "oklch(26% 0.006 97.4)",
+          "oklch(37% 0.007 97.4)",
+          "oklch(48% 0.007 97.4)",
+          "oklch(60% 0.007 97.4)",
+          "oklch(72% 0.006 97.4)",
+          "oklch(84% 0.004 97.4)",
+          "oklch(95% 0.001 97.4)"
+        ]
+      },
+      "chalk-secondary": {
+        "role": "neutral",
+        "displayName": "Chalk Secondary",
+        "canonical": "#A3A9AF",
+        "oklch": "oklch(73.2% 0.011 248)",
+        "light": "#565C62",
+        "purpose": "Meta text, section labels.",
+        "cssVar": "--text-secondary",
+        "tonalRamp": [
+          "oklch(15% 0.006 248)",
+          "oklch(26% 0.009 248)",
+          "oklch(37% 0.011 248)",
+          "oklch(48% 0.011 248)",
+          "oklch(60% 0.011 248)",
+          "oklch(72% 0.01 248)",
+          "oklch(84% 0.007 248)",
+          "oklch(95% 0.002 248)"
+        ]
+      },
+      "chalk-tertiary": {
+        "role": "neutral",
+        "displayName": "Chalk Tertiary",
+        "canonical": "#80878E",
+        "oklch": "oklch(62% 0.013 248)",
+        "light": "#6A7076",
+        "purpose": "Inactive tabs, placeholders, missed-day rings.",
+        "cssVar": "--text-tertiary",
+        "tonalRamp": [
+          "oklch(15% 0.008 248)",
+          "oklch(26% 0.011 248)",
+          "oklch(37% 0.013 248)",
+          "oklch(48% 0.013 248)",
+          "oklch(60% 0.013 248)",
+          "oklch(72% 0.012 248)",
+          "oklch(84% 0.008 248)",
+          "oklch(95% 0.003 248)"
+        ]
+      },
+      "race-pink": {
+        "role": "primary",
+        "displayName": "Race Pink",
+        "canonical": "#FF2E88",
+        "oklch": "oklch(66.2% 0.244 1.7)",
+        "light": "#D4106A",
+        "purpose": "Race bib band, today, primary action, interactive tint, focus.",
+        "cssVar": "--accent",
+        "tonalRamp": [
+          "oklch(15% 0.137 1.7)",
+          "oklch(26% 0.207 1.7)",
+          "oklch(37% 0.244 1.7)",
+          "oklch(48% 0.244 1.7)",
+          "oklch(60% 0.244 1.7)",
+          "oklch(72% 0.217 1.7)",
+          "oklch(84% 0.144 1.7)",
+          "oklch(95% 0.051 1.7)"
+        ]
+      },
+      "on-race-pink": {
+        "role": "primary",
+        "displayName": "On Race Pink",
+        "canonical": "#111315",
+        "oklch": "oklch(18.5% 0.005 248.1)",
+        "light": "#FFFFFF",
+        "purpose": "Text and icons on race pink.",
+        "cssVar": "--on-accent",
+        "tonalRamp": [
+          "oklch(15% 0.003 248.1)",
+          "oklch(26% 0.004 248.1)",
+          "oklch(37% 0.005 248.1)",
+          "oklch(48% 0.005 248.1)",
+          "oklch(60% 0.005 248.1)",
+          "oklch(72% 0.005 248.1)",
+          "oklch(84% 0.003 248.1)",
+          "oklch(95% 0.001 248.1)"
+        ]
+      },
+      "bib-paper": {
+        "role": "tertiary",
+        "displayName": "Bib Paper",
+        "canonical": "#F4F5F6",
+        "oklch": "oklch(97% 0.002 247.8)",
+        "light": "#FFFFFF",
+        "purpose": "Race bib plate only.",
+        "cssVar": "--bib",
+        "tonalRamp": [
+          "oklch(15% 0.001 247.8)",
+          "oklch(26% 0.001 247.8)",
+          "oklch(37% 0.002 247.8)",
+          "oklch(48% 0.002 247.8)",
+          "oklch(60% 0.002 247.8)",
+          "oklch(72% 0.002 247.8)",
+          "oklch(84% 0.001 247.8)",
+          "oklch(95% 0 247.8)"
+        ]
+      },
+      "bib-ink": {
+        "role": "tertiary",
+        "displayName": "Bib Ink",
+        "canonical": "#15171A",
+        "oklch": "oklch(20.4% 0.007 258.4)",
+        "light": "#15171A",
+        "purpose": "Text on the bib.",
+        "cssVar": "--bib-ink",
+        "tonalRamp": [
+          "oklch(15% 0.004 258.4)",
+          "oklch(26% 0.006 258.4)",
+          "oklch(37% 0.007 258.4)",
+          "oklch(48% 0.007 258.4)",
+          "oklch(60% 0.007 258.4)",
+          "oklch(72% 0.006 258.4)",
+          "oklch(84% 0.004 258.4)",
+          "oklch(95% 0.001 258.4)"
+        ]
+      },
+      "bib-ink-secondary": {
+        "role": "tertiary",
+        "displayName": "Bib Ink Secondary",
+        "canonical": "#4A4F55",
+        "oklch": "oklch(42.5% 0.012 252.9)",
+        "light": "#4A4F55",
+        "purpose": "Secondary text on the empty bib.",
+        "cssVar": "--bib-ink-secondary",
+        "tonalRamp": [
+          "oklch(15% 0.007 252.9)",
+          "oklch(26% 0.01 252.9)",
+          "oklch(37% 0.012 252.9)",
+          "oklch(48% 0.012 252.9)",
+          "oklch(60% 0.012 252.9)",
+          "oklch(72% 0.011 252.9)",
+          "oklch(84% 0.007 252.9)",
+          "oklch(95% 0.002 252.9)"
+        ]
+      },
+      "cap-swim": {
+        "role": "secondary",
+        "displayName": "Swim Electric Blue",
+        "canonical": "#1FA2FF",
+        "oklch": "oklch(69.2% 0.172 246.8)",
+        "light": "#0070D1",
+        "purpose": "Swim caps, dots, badges.",
+        "cssVar": "--swim",
+        "tonalRamp": [
+          "oklch(15% 0.096 246.8)",
+          "oklch(26% 0.145 246.8)",
+          "oklch(37% 0.172 246.8)",
+          "oklch(48% 0.172 246.8)",
+          "oklch(60% 0.172 246.8)",
+          "oklch(72% 0.152 246.8)",
+          "oklch(84% 0.102 246.8)",
+          "oklch(95% 0.036 246.8)"
+        ]
+      },
+      "cap-bike": {
+        "role": "secondary",
+        "displayName": "Bike Safety Orange",
+        "canonical": "#FF7A1A",
+        "oklch": "oklch(72.4% 0.187 48.9)",
+        "light": "#C95200",
+        "purpose": "Bike caps, dots, badges.",
+        "cssVar": "--bike",
+        "tonalRamp": [
+          "oklch(15% 0.105 48.9)",
+          "oklch(26% 0.158 48.9)",
+          "oklch(37% 0.187 48.9)",
+          "oklch(48% 0.187 48.9)",
+          "oklch(60% 0.187 48.9)",
+          "oklch(72% 0.166 48.9)",
+          "oklch(84% 0.11 48.9)",
+          "oklch(95% 0.039 48.9)"
+        ]
+      },
+      "cap-run": {
+        "role": "secondary",
+        "displayName": "Run Acid Lime",
+        "canonical": "#B4F000",
+        "oklch": "oklch(88.1% 0.224 125.8)",
+        "light": "#4C8A00",
+        "purpose": "Run caps, dots, badges.",
+        "cssVar": "--run",
+        "tonalRamp": [
+          "oklch(15% 0.126 125.8)",
+          "oklch(26% 0.189 125.8)",
+          "oklch(37% 0.224 125.8)",
+          "oklch(48% 0.224 125.8)",
+          "oklch(60% 0.224 125.8)",
+          "oklch(72% 0.198 125.8)",
+          "oklch(84% 0.132 125.8)",
+          "oklch(95% 0.047 125.8)"
+        ]
+      },
+      "cap-strength": {
+        "role": "secondary",
+        "displayName": "Strength Magenta-Violet",
+        "canonical": "#D45CFF",
+        "oklch": "oklch(69.2% 0.245 315.9)",
+        "light": "#A436D1",
+        "purpose": "Strength caps, dots, badges.",
+        "cssVar": "--strength",
+        "tonalRamp": [
+          "oklch(15% 0.137 315.9)",
+          "oklch(26% 0.207 315.9)",
+          "oklch(37% 0.245 315.9)",
+          "oklch(48% 0.245 315.9)",
+          "oklch(60% 0.245 315.9)",
+          "oklch(72% 0.217 315.9)",
+          "oklch(84% 0.145 315.9)",
+          "oklch(95% 0.051 315.9)"
+        ]
+      },
+      "positive": {
+        "role": "neutral",
+        "displayName": "Positive",
+        "canonical": "#B4F000",
+        "oklch": "oklch(88.1% 0.224 125.8)",
+        "light": "#3F7A00",
+        "purpose": "Positive status text.",
+        "cssVar": "--positive",
+        "tonalRamp": [
+          "oklch(15% 0.126 125.8)",
+          "oklch(26% 0.189 125.8)",
+          "oklch(37% 0.224 125.8)",
+          "oklch(48% 0.224 125.8)",
+          "oklch(60% 0.224 125.8)",
+          "oklch(72% 0.198 125.8)",
+          "oklch(84% 0.132 125.8)",
+          "oklch(95% 0.047 125.8)"
+        ]
+      },
+      "destructive": {
+        "role": "neutral",
+        "displayName": "Destructive",
+        "canonical": "#FF5A4E",
+        "oklch": "oklch(68.7% 0.203 27.8)",
+        "light": "#C8261B",
+        "purpose": "Destructive text on control plates.",
+        "cssVar": "--destructive",
+        "tonalRamp": [
+          "oklch(15% 0.114 27.8)",
+          "oklch(26% 0.172 27.8)",
+          "oklch(37% 0.203 27.8)",
+          "oklch(48% 0.203 27.8)",
+          "oklch(60% 0.203 27.8)",
+          "oklch(72% 0.18 27.8)",
+          "oklch(84% 0.12 27.8)",
+          "oklch(95% 0.042 27.8)"
+        ]
+      },
+      "race-pink-wash": {
+        "role": "primary",
+        "displayName": "Race Pink Wash",
+        "canonical": "rgba(255, 46, 136, 0.14)",
+        "light": "rgba(212, 16, 106, 0.1)",
+        "cssVar": "--accent-wash",
+        "purpose": "Focused form row, today row in Kraft."
+      }
+    },
+    "themes": [
+      {
+        "name": "dark",
+        "default": true,
+        "selector": ":root",
+        "note": "Default scene; color-scheme: dark."
+      },
+      {
+        "name": "light",
+        "selector": "html[data-theme=\"light\"], or prefers-color-scheme: light when no data-theme is set",
+        "note": "Same world on a light mat; deeper pink and darker cap colours for contrast. Values in colorMeta.*.light."
+      }
+    ],
+    "typographyMeta": {
+      "display": {
+        "displayName": "Bib Number",
+        "purpose": "Days-to-race figure on the race bib only."
+      },
+      "headline": {
+        "displayName": "Result Time",
+        "purpose": "Race result total time."
+      },
+      "title": {
+        "displayName": "Screen Title",
+        "purpose": "Nav bar title, uppercase; 20px centred in sheets."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Per-sport weekly values; splits at 20px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Inputs, menu items, sentences. Never below 16px for inputs."
+      },
+      "body-strong": {
+        "displayName": "Body Strong",
+        "purpose": "Row titles, buttons."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Secondary row text, comparisons, empty-state copy."
+      },
+      "label": {
+        "displayName": "Section Label",
+        "purpose": "Uppercase section headings in chalk-secondary."
+      },
+      "tab-label": {
+        "displayName": "Tab Label",
+        "purpose": "Tab bar labels."
+      }
+    },
+    "fonts": {
+      "families": [
+        "Barlow 400/500/600",
+        "Barlow Condensed 600/700/800"
+      ],
+      "source": "Google Fonts (fonts.googleapis.com / fonts.gstatic.com), runtime-cached by the service worker (sw.js FONT_HOSTS).",
+      "openItem": "Self-hosting the fonts is pending the owner's decision."
+    },
+    "shadows": [
+      {
+        "name": "float",
+        "value": "0 8px 28px rgba(0,0,0,0.35)",
+        "purpose": "Kebab popover and action menu."
+      },
+      {
+        "name": "knob",
+        "value": "0 1px 3px rgba(0,0,0,0.3)",
+        "purpose": "Toggle thumb."
+      },
+      {
+        "name": "scrim",
+        "value": "rgba(0,0,0,0.55)",
+        "purpose": "Backdrop behind sheets (background, not a shadow)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "sheet",
+        "value": "transform 0.32s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Bottom sheet slide-up."
+      },
+      {
+        "name": "fade",
+        "value": "opacity 0.2s",
+        "purpose": "Toast."
+      },
+      {
+        "name": "toggle",
+        "value": "background 0.2s, transform 0.2s",
+        "purpose": "Toggle track and knob."
+      },
+      {
+        "name": "press",
+        "value": "transform: scale(0.96)",
+        "purpose": "Primary action :active."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none",
+        "purpose": "Sheet, toggle and toast under prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "column-max",
+        "value": "560px",
+        "purpose": "App column and sheets cap; no other breakpoints."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main in-form action: race pink with mat-coloured text.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Speichern</button>",
+      "css": ".ds-btn { border: none; border-radius: 6px; padding: 13px 18px; min-height: 48px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; } .ds-btn:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; } .ds-btn-primary { background: var(--accent, #FF2E88); color: var(--on-accent, #111315); } .ds-btn-primary:active { filter: brightness(0.92); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Neutral action on a control plate; destructive variant uses red text on the same plate.",
+      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-btn2\">Abbrechen</button><button class=\"ds-btn2 ds-btn2-destructive\">Löschen</button></div>",
+      "css": ".ds-btn2 { border: none; border-radius: 6px; padding: 13px 18px; min-height: 48px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 16px; font-weight: 600; cursor: pointer; background: var(--control-bg, #2A2E33); color: var(--text, #F2F1EC); } .ds-btn2-destructive { color: var(--destructive, #FF5A4E); } .ds-btn2:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; } .ds-btn2:active { filter: brightness(1.15); }"
+    },
+    {
+      "name": "Tab Bar with Primary Action",
+      "kind": "nav",
+      "refersTo": "tab-item",
+      "description": "Four tabs with the single pink + action in the thumb zone between Log and Kraft.",
+      "html": "<nav class=\"ds-tabbar\"><button class=\"ds-tab ds-tab-active\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 11.5 12 4l9 7.5M5.5 10v9.5a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V10\"/></svg><span>Woche</span></button><button class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01\"/></svg><span>Log</span></button><button class=\"ds-tab-primary\" aria-label=\"Hinzufügen\"><svg width=\"30\" height=\"30\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg></button><button class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M3 10v4M21 10v4M8 12h8\"/><rect x=\"5\" y=\"6\" width=\"3\" height=\"12\" rx=\"1.5\"/><rect x=\"16\" y=\"6\" width=\"3\" height=\"12\" rx=\"1.5\"/></svg><span>Kraft</span></button><button class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 4h8v5a4 4 0 0 1-8 0V4ZM8 6H5a2 2 0 0 0 0 4h1M16 6h3a2 2 0 0 1 0 4h-1M12 13v3m-3 4h6l-1-2.5h-4L9 20Z\"/></svg><span>Rennen</span></button></nav>",
+      "css": ".ds-tabbar { display: flex; border-top: 1px solid var(--separator, #2E3338); background: var(--bg, #111315); } .ds-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 0 6px; min-height: 52px; background: none; border: none; color: var(--text-tertiary, #80878E); font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; } .ds-tab:hover { color: var(--text-secondary, #A3A9AF); } .ds-tab-active, .ds-tab-active:hover { color: var(--accent, #FF2E88); } .ds-tab-primary { flex: 0 0 64px; align-self: center; height: 46px; margin: 4px 2px; border-radius: 12px; border: none; background: var(--accent, #FF2E88); color: var(--on-accent, #111315); display: flex; align-items: center; justify-content: center; cursor: pointer; } .ds-tab-primary:active { transform: scale(0.96); } .ds-tab:focus-visible, .ds-tab-primary:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; }"
+    },
+    {
+      "name": "Form Row Group",
+      "kind": "input",
+      "refersTo": "form-row",
+      "description": "Settings-style rows on a plate: label left, borderless right-aligned value; focus washes the row pink.",
+      "html": "<div class=\"ds-group\"><label class=\"ds-row\"><span class=\"ds-label\">Distanz</span><input type=\"text\" placeholder=\"0\"><span class=\"ds-unit\">km</span></label><label class=\"ds-row\"><span class=\"ds-label\">Notiz</span><input type=\"text\" placeholder=\"optional\"></label></div>",
+      "css": ".ds-group { background: var(--bg-card, #1B1E21); border-radius: 6px; overflow: hidden; } .ds-row { display: flex; align-items: center; gap: 10px; padding: 12px 16px; min-height: 52px; border-bottom: 1px solid var(--separator, #2E3338); color: var(--text, #F2F1EC); font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); } .ds-row:last-child { border-bottom: none; } .ds-label { flex: 1; font-size: 16px; } .ds-row input { border: none; background: none; color: var(--text, #F2F1EC); font: inherit; font-size: 16px; flex: 1; min-width: 0; text-align: right; outline: none; caret-color: var(--accent, #FF2E88); } .ds-row input::placeholder { color: var(--text-tertiary, #80878E); } .ds-row:focus-within { background: var(--accent-wash, rgba(255,46,136,0.14)); } .ds-unit { color: var(--text-secondary, #A3A9AF); font-size: 15px; }"
+    },
+    {
+      "name": "List Row",
+      "kind": "card",
+      "refersTo": "list-row",
+      "description": "Workout row on a plate with sport badge, title, meta, trailing value and chevron.",
+      "html": "<div class=\"ds-list\"><div class=\"ds-lrow\" tabindex=\"0\"><span class=\"ds-badge\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"5.5\" cy=\"16.5\" r=\"3.5\" fill=\"currentColor\" fill-opacity=\".25\"/><circle cx=\"18.5\" cy=\"16.5\" r=\"3.5\" fill=\"currentColor\" fill-opacity=\".25\"/><path d=\"M5.5 16.5H12L9 9.5h7l2.5 7M12 16.5l4-7M9 9.5 5.5 16.5\"/></svg></span><div class=\"ds-lmain\"><div class=\"ds-ltitle\">Rad</div><div class=\"ds-lsub\">Di, 3. Nov. · 1:30 h</div></div><div class=\"ds-ltrail\">42,0 km</div><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#80878E\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"m9 18 6-6-6-6\"/></svg></div></div>",
+      "css": ".ds-list { background: var(--bg-card, #1B1E21); border-radius: 6px; overflow: hidden; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); color: var(--text, #F2F1EC); } .ds-lrow { display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 56px; border-bottom: 1px solid var(--separator, #2E3338); cursor: pointer; } .ds-lrow:last-child { border-bottom: none; } .ds-lrow:hover, .ds-lrow:active { background: var(--control-bg, #2A2E33); } .ds-lrow:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: -2px; } .ds-badge { width: 40px; height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--bike, #FF7A1A); background: color-mix(in srgb, var(--bike, #FF7A1A) 18%, transparent); } .ds-lmain { flex: 1; min-width: 0; } .ds-ltitle { font-size: 16px; font-weight: 600; } .ds-lsub { font-size: 14px; color: var(--text-secondary, #A3A9AF); margin-top: 2px; } .ds-ltrail { font-size: 14px; color: var(--text-secondary, #A3A9AF); }"
+    },
+    {
+      "name": "Race Bib",
+      "kind": "custom",
+      "refersTo": "race-bib",
+      "description": "Signature: white paper start number with safety-pin holes, giant days-to-race figure and pink band.",
+      "html": "<div class=\"ds-bib\" tabindex=\"0\"><div class=\"ds-bib-head\"><span>Ironman 70.3 Kraichgau</span><span>19. Dez.</span></div><div class=\"ds-bib-num\"><span class=\"n\">46</span><span class=\"u\">Tage</span></div><div class=\"ds-bib-band\"><span>Ziel 5:30:00</span><span>6 Wo 4 T</span></div></div>",
+      "css": ".ds-bib { position: relative; background: var(--bib, #F4F5F6); color: var(--bib-ink, #15171A); border-radius: 4px; padding: 16px 22px 0; overflow: hidden; cursor: pointer; } .ds-bib::before, .ds-bib::after { content: \"\"; position: absolute; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--bg, #111315); } .ds-bib::before { left: 8px; } .ds-bib::after { right: 8px; } .ds-bib:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; } .ds-bib-head { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; } .ds-bib-num { display: flex; align-items: baseline; gap: 10px; margin: 2px 0 10px; font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); } .ds-bib-num .n { font-size: 96px; font-weight: 800; line-height: 0.86; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; } .ds-bib-num .u { font-size: 24px; font-weight: 800; text-transform: uppercase; } .ds-bib-band { margin: 0 -22px; padding: 9px 22px; background: var(--accent, #FF2E88); color: var(--on-accent, #111315); display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 14px; font-weight: 600; }"
+    },
+    {
+      "name": "Wechselzone Rack",
+      "kind": "custom",
+      "refersTo": "rack-number",
+      "description": "Signature: seven numbered rack slots on a rail; caps sized by duration, dashed for missed days, hollow rings for days ahead, today in pink.",
+      "html": "<div class=\"ds-rack\"><div class=\"ds-slots\"><button class=\"ds-slot\"><span class=\"ds-no\">1</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap\" style=\"width:34px;height:34px;background:var(--swim,#1FA2FF)\"></span></span><span class=\"ds-day\">Mo</span></button><button class=\"ds-slot ds-today\"><span class=\"ds-no\">2</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap\" style=\"width:20px;height:20px;background:var(--strength,#D45CFF)\"></span><span class=\"ds-cap\" style=\"width:24px;height:24px;background:var(--run,#B4F000)\"></span></span><span class=\"ds-day\">Di</span></button><button class=\"ds-slot\"><span class=\"ds-no\">3</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">Mi</span></button><button class=\"ds-slot\"><span class=\"ds-no\">4</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">Do</span></button><button class=\"ds-slot\"><span class=\"ds-no\">5</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">Fr</span></button><button class=\"ds-slot\"><span class=\"ds-no\">6</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">Sa</span></button><button class=\"ds-slot\"><span class=\"ds-no\">7</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">So</span></button></div></div>",
+      "css": ".ds-rack { background: var(--bg-card, #1B1E21); border-radius: 6px; padding: 14px 8px 10px; } .ds-slots { display: grid; grid-template-columns: repeat(7, 1fr); background: linear-gradient(var(--rail, #3A4046), var(--rail, #3A4046)) no-repeat 6px 17px / calc(100% - 12px) 3px; } .ds-slot { display: flex; flex-direction: column; align-items: center; min-height: 100px; background: none; border: none; padding: 0; cursor: pointer; } .ds-slot:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; border-radius: 4px; } .ds-no { font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 13px; font-weight: 700; line-height: 18px; min-width: 22px; padding: 0 4px; border-radius: 3px; background: var(--control-bg, #2A2E33); color: var(--text-secondary, #A3A9AF); font-variant-numeric: tabular-nums; position: relative; z-index: 1; margin-bottom: 1px; } .ds-slot:hover .ds-no { color: var(--text, #F2F1EC); } .ds-today .ds-no, .ds-today:hover .ds-no { background: var(--accent, #FF2E88); color: var(--on-accent, #111315); } .ds-hook { width: 2px; height: 12px; background: var(--rail, #3A4046); } .ds-caps { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; } .ds-cap { border-radius: 50%; flex-shrink: 0; } .ds-future { width: 10px; height: 10px; border: 2px solid var(--rail, #3A4046); } .ds-day { font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 15px; font-weight: 600; letter-spacing: 0.06em; color: var(--text-secondary, #A3A9AF); text-transform: uppercase; margin-top: 6px; } .ds-today .ds-day { color: var(--text, #F2F1EC); }"
+    },
+    {
+      "name": "Sport Line",
+      "kind": "custom",
+      "refersTo": "list-row",
+      "description": "Per-sport weekly row: solid cap when trained, dashed sport-coloured ring when not; condensed figure with last-week comparison.",
+      "html": "<div class=\"ds-sl-list\"><div class=\"ds-sl\"><span class=\"ds-sl-cap\" style=\"background:var(--swim,#1FA2FF)\"></span><div><div class=\"ds-sl-name\">Schwimmen</div><div class=\"ds-sl-meta\">1 Einheit · 45 min</div></div><div class=\"ds-sl-val\"><div class=\"v\">2.200 m</div><div class=\"p\">wie Vorwoche bis Di</div></div></div><div class=\"ds-sl ds-idle\"><span class=\"ds-sl-cap\" style=\"border:2px dashed var(--bike,#FF7A1A)\"></span><div><div class=\"ds-sl-name\">Rad</div><div class=\"ds-sl-meta\">noch offen diese Woche</div></div><div class=\"ds-sl-val\"><div class=\"v\">–</div><div class=\"p\">Vorwoche bis Di: –</div></div></div></div>",
+      "css": ".ds-sl-list { background: var(--bg-card, #1B1E21); border-radius: 6px; overflow: hidden; color: var(--text, #F2F1EC); font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); } .ds-sl { display: grid; grid-template-columns: 14px 1fr auto; gap: 12px; align-items: center; padding: 12px 16px; min-height: 60px; border-bottom: 1px solid var(--separator, #2E3338); } .ds-sl:last-child { border-bottom: none; } .ds-sl-cap { width: 14px; height: 14px; border-radius: 50%; } .ds-sl-name { font-size: 16px; font-weight: 600; } .ds-sl-meta { font-size: 14px; color: var(--text-secondary, #A3A9AF); margin-top: 1px; } .ds-sl-val { text-align: right; } .ds-sl-val .v { font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 28px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; } .ds-sl-val .p { font-size: 13px; color: var(--text-secondary, #A3A9AF); margin-top: 3px; } .ds-idle .v { color: var(--text-tertiary, #80878E); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Wechselzone",
+    "overview": "The app is a triathlon transition zone at dusk. The ground is a near-black rubber mat; content sits on slightly raised charcoal plates; the week is a bike rack with seven numbered slots; every session is a latex swim cap in its sport's colour, sized by volume. The next race is a white paper start number pinned to the top of the Woche screen. One race pink marks the race, today, and whatever you can press.\n\nIt is a dense, one-handed tool, not a dashboard of grey tiles. Figures are big, heavy and condensed so they read at arm's length in a gym or outdoors; prose stays in a plain sans. Surfaces are flat. Colour carries data (which sport) and intent (pink = act / now / race), never decoration. The rejected reference is the stock iOS grouped-tile dashboard with system blue.\n\nDark is the default scene. A daylight variant keeps the same world on a light-grey mat with white plates, a deeper pink, and darker cap colours for contrast.",
+    "keyCharacteristics": [
+      "Rubber-mat ground, charcoal plates, hairline rails; no shadows at rest.",
+      "Four sport cap colours used only as data marks.",
+      "One accent, race pink, for race, today and interaction.",
+      "Barlow Condensed uppercase for figures and labels, Barlow for text, tabular numerals throughout.",
+      "Solid = done, dashed = missed, small hollow ring = still to come.",
+      "Portrait phone column, max 560px, thumb-zone primary action in the tab bar."
+    ],
+    "rules": [
+      {
+        "name": "The Caps Are Data Rule",
+        "body": "Sport colours appear only on marks that stand for a sport (caps, dots, badges, picker selection). Never on chrome, buttons or headings.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Pink Rule",
+        "body": "Race pink is the only accent. It means the race, today, or \"press here\". No second accent colour exists, and system blue is never used.",
+        "section": "colors"
+      },
+      {
+        "name": "The Condensed Figures Rule",
+        "body": "Every number, day abbreviation and uppercase label is Barlow Condensed with tabular numerals (`.figure` utility); every sentence is Barlow, sentence case.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Plates Rule",
+        "body": "Cards, lists, the rack and the bib carry no shadow. If something needs to read as \"above\", it uses the raised plate tone, and a shadow only when it floats over other content.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do mark state by line form: solid filled cap = done, dashed ring = nothing logged, small hollow rail ring = still ahead.",
+      "Do use race pink for the race, today, and the thing to press, with mat-coloured text on it in dark mode.",
+      "Do set every figure in Barlow Condensed with tabular numerals, and keep body text and inputs at 16px.",
+      "Do keep touch targets at 44px or more and route each screen's main action through the single tab-bar \"+\".",
+      "Do use the daylight variant's darker cap and pink values in light mode; never reuse the dark-mode cap colours on white.",
+      "Do separate rows with 1px hairlines inside a plate rather than spacing plates apart."
+    ],
+    "donts": [
+      "Don't build the iOS grey-tile dashboard or use system blue.",
+      "Don't colour buttons, headings or chrome with a sport colour.",
+      "Don't add a second accent colour or a pink gradient.",
+      "Don't put shadows on resting plates, cards, the rack or the bib.",
+      "Don't add a floating action button over content; the primary action lives in the tab bar.",
+      "Don't block browser zoom (the viewport allows scaling; keep it that way).",
+      "Don't treat the Google Fonts dependency as settled: Barlow and Barlow Condensed are loaded from fonts.googleapis.com and runtime-cached by the service worker; self-hosting them is an open decision for the owner."
+    ]
+  }
+}

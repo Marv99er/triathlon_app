@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--asphalt:#16181A;--asphalt-2:#202326;--line:#2C3034;--chalk:#F2F0EA;--muted:#9AA0A6;--sign:#FFD60A;--swim:#2E9BFF;--bike:#FF7A1A;--run:#2FD27A;--str:#C77DFF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:var(--asphalt);color:var(--chalk);font-family:Barlow,system-ui,sans-serif}
+.top{display:flex;justify-content:space-between;align-items:center;padding:54px 20px 10px}
+.top h1{font:800 30px/1 'Barlow Condensed';letter-spacing:.02em;text-transform:uppercase}
+.top .wk{font-size:13px;color:var(--muted)}
+.sign{margin:8px 16px 0;background:var(--sign);color:#111;border-radius:6px;padding:14px 16px 12px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:end;box-shadow:inset 0 0 0 3px #111,inset 0 0 0 5px var(--sign)}
+.sign .n{font:800 84px/.82 'Barlow Condensed';grid-row:span 2}
+.sign .u{font:800 22px/1 'Barlow Condensed';text-transform:uppercase}
+.sign .r{font-size:14px;font-weight:600}
+.sign .g{grid-column:1/-1;font-size:12px;font-weight:500;border-top:2px solid #111;padding-top:6px;margin-top:6px;display:flex;justify-content:space-between}
+.sec{padding:22px 20px 8px;display:flex;justify-content:space-between;align-items:baseline}
+.sec h2{font:600 15px 'Barlow Condensed';letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sec span{font-size:13px;color:var(--muted)}
+.road{margin:0 16px;background:var(--asphalt-2);border-radius:6px;padding:14px 12px 10px}
+.track{position:relative;height:56px;display:grid;grid-template-columns:repeat(7,1fr)}
+.track:before{content:"";position:absolute;left:0;right:0;top:28px;border-top:2px dashed #3A3F44}
+.day{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.dot{border-radius:50%;z-index:1}
+.ring{border:2px dashed var(--muted);background:transparent}
+.days{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font:600 12px 'Barlow Condensed';letter-spacing:.08em;color:var(--muted);margin-top:4px}
+.days .t{color:var(--sign)}
+.rows{margin:0 16px;background:var(--asphalt-2);border-radius:6px}
+.row{display:grid;grid-template-columns:10px 1fr auto;gap:12px;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.chip{width:10px;height:28px;border-radius:2px}
+.row b{font:600 16px Barlow;display:block}
+.row small{font-size:13px;color:var(--muted)}
+.val{text-align:right}
+.val .v{font:800 26px/1 'Barlow Condensed'}
+.val .d{font-size:12px;color:var(--run)}
+.val .d.neg{color:#FF6B5B}
+.tab{position:absolute;left:0;right:0;bottom:0;height:84px;border-top:1px solid var(--line);background:#121416;display:grid;grid-template-columns:repeat(4,1fr);padding-top:10px;text-align:center;font:600 12px 'Barlow Condensed';letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tab .on{color:var(--sign)}
+.tab i{display:block;width:24px;height:24px;margin:0 auto 4px;border:2px solid currentColor;border-radius:6px}
+.fab{position:absolute;right:20px;bottom:100px;width:56px;height:56px;border-radius:50%;background:var(--sign);color:#111;font:800 34px/56px 'Barlow Condensed';text-align:center}
+</style></head><body>
+<div class="top"><h1>Woche 45</h1><span class="wk">2.–8. Nov.</span></div>
+<div class="sign"><div class="n">46</div><div class="u">Tage bis zum Start</div><div class="r">Ironman 70.3 Kraichgau</div><div class="g"><span>19. Dez. · Ziel 5:30:00</span><span>6 Wochen 4 Tage</span></div></div>
+<div class="sec"><h2>Streckenabschnitt Woche</h2><span>6:45 h · +12 %</span></div>
+<div class="road"><div class="track">
+<div class="day"><div class="dot" style="width:22px;height:22px;background:var(--swim)"></div></div>
+<div class="day"><div class="dot" style="width:32px;height:32px;background:var(--bike)"></div></div>
+<div class="day"><div class="dot" style="width:24px;height:24px;background:var(--run)"></div><div class="dot" style="width:14px;height:14px;background:var(--str)"></div></div>
+<div class="day"><div class="dot ring" style="width:20px;height:20px"></div></div>
+<div class="day"><div class="dot ring" style="width:26px;height:26px"></div></div>
+<div class="day"><div class="dot ring" style="width:38px;height:38px"></div></div>
+<div class="day"><div class="dot ring" style="width:30px;height:30px"></div></div>
+</div><div class="days"><span>Mo</span><span>Di</span><span class="t">Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div></div>
+<div class="sec"><h2>Je Disziplin</h2><span>vs. Vorwoche</span></div>
+<div class="rows">
+<div class="row"><div class="chip" style="background:var(--swim)"></div><div><b>Schwimmen</b><small>1 Einheit · 45 min</small></div><div class="val"><div class="v">2.200 m</div><div class="d neg">−8 %</div></div></div>
+<div class="row"><div class="chip" style="background:var(--bike)"></div><div><b>Rad</b><small>1 Einheit · 1:30 h</small></div><div class="val"><div class="v">42,5 km</div><div class="d">+5 %</div></div></div>
+<div class="row"><div class="chip" style="background:var(--run)"></div><div><b>Laufen</b><small>1 Einheit · 50 min</small></div><div class="val"><div class="v">10,1 km</div><div class="d">+3 %</div></div></div>
+<div class="row"><div class="chip" style="background:var(--str)"></div><div><b>Kraft</b><small>Oberkörper</small></div><div class="val"><div class="v">55 min</div><div class="d">±0</div></div></div>
+</div>
+<div class="fab">+</div>
+<div class="tab"><div class="on"><i></i>Woche</div><div><i></i>Log</div><div><i></i>Kraft</div><div><i></i>Rennen</div></div>
+</body></html>

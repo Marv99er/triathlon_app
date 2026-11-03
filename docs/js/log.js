@@ -1,6 +1,6 @@
-import { el, SPORT_TYPES, SELECTABLE_SPORTS, formatDuration, averagePace, formatDateShort, formatDateAbbrev, exerciseSummary, toDateInputValue } from './utils.js';
+import { el, SPORT_TYPES, SELECTABLE_SPORTS, formatDuration, formatDistance, averagePace, formatDateShort, formatDateAbbrev, exerciseSummary, toDateInputValue } from './utils.js';
 import { icon } from './icons.js';
-import { openSheet, showActionMenu, showConfirm, showToast } from './ui.js';
+import { openSheet, showActionMenu, showConfirm, showToast, durationRow, fab } from './ui.js';
 import { db, uuid } from './db.js';
 import { parseTCX } from './tcx.js';
 import { ignoreIntervalsActivity } from './intervals.js';
@@ -13,7 +13,7 @@ export function sportBadge(sportType, { showsLabel = false, size = 36 } = {}) {
   const wrap = el('div', { class: 'sport-badge' });
   const circle = el('div', {
     class: 'sport-badge-icon',
-    style: `width:${size}px;height:${size}px;background:${sport.tint}26;color:${sport.tint}`,
+    style: `width:${size}px;height:${size}px;background:color-mix(in srgb, ${sport.tint} 18%, transparent);color:${sport.tint}`,
     html: icon(sport.icon, { size: Math.round(size * 0.45) }),
   });
   wrap.append(circle);
@@ -25,7 +25,7 @@ export function workoutRow(workout, onClick) {
   const sport = SPORT_TYPES[workout.sportType];
   const parts = [];
   if (sport.tracksDistance && workout.distanceKm) {
-    parts.push(`${workout.distanceKm.toLocaleString('de-DE', { maximumFractionDigits: 2 })} km`);
+    parts.push(formatDistance(workout.sportType, workout.distanceKm));
   }
   parts.push(formatDuration(workout.durationSeconds));
   if (workout.sportType === 'strength' && workout.strengthExercises?.length) {
@@ -42,7 +42,7 @@ export function workoutRow(workout, onClick) {
     ]),
     el('div', { class: 'list-row-trailing' }, [
       el('div', {}, formatDateShort(workout.date)),
-      workout.rpe ? el('div', { style: 'font-size:11px;color:var(--text-tertiary)' }, `RPE ${workout.rpe}`) : null,
+      workout.rpe ? el('div', { style: 'font-size:13px;margin-top:2px', title: 'Anstrengung (RPE 1–10)' }, `RPE ${workout.rpe}`) : null,
     ]),
   ]);
   return row;
@@ -75,6 +75,11 @@ export function openAddWorkoutMenu(anchorEl) {
 
 // ---------- Trainings-Formular ----------
 
+export function rpeText(rpe) {
+  const feel = rpe <= 3 ? 'locker' : rpe <= 6 ? 'mittel' : rpe <= 8 ? 'hart' : 'maximal';
+  return `Anstrengung ${rpe}/10 · ${feel}`;
+}
+
 export function openWorkoutForm({ existingWorkout, prefill }) {
   let sportType = existingWorkout?.sportType || prefill?.sportType || 'run';
   const isEditing = !!existingWorkout;
@@ -88,6 +93,22 @@ export function openWorkoutForm({ existingWorkout, prefill }) {
       const durationTotal = existingWorkout?.durationSeconds ?? prefill?.durationSeconds ?? 1800;
 
       const pickerRow = el('div', { class: 'sport-picker' });
+      // Schwimmen in Metern, Rad und Lauf in Kilometern; gespeichert wird immer in km
+      let distanceKm = existingWorkout?.distanceKm ?? prefill?.distanceKm ?? null;
+      const distanceInput = el('input', { type: 'number', inputmode: 'decimal' });
+      const distanceUnit = el('span', { class: 'unit-suffix' });
+      const isMeters = () => sportType === 'swim';
+      distanceInput.addEventListener('input', () => {
+        const v = parseFloat(distanceInput.value);
+        distanceKm = Number.isFinite(v) ? (isMeters() ? v / 1000 : v) : null;
+      });
+      function applyDistanceUnit() {
+        distanceUnit.textContent = isMeters() ? 'm' : 'km';
+        distanceInput.placeholder = isMeters() ? 'z. B. 2000' : 'z. B. 10,5';
+        distanceInput.step = isMeters() ? '25' : '0.01';
+        distanceInput.value = distanceKm == null ? '' : isMeters() ? Math.round(distanceKm * 1000) : Math.round(distanceKm * 100) / 100;
+      }
+
       function renderPicker() {
         pickerRow.innerHTML = '';
         for (const key of SELECTABLE_SPORTS) {
@@ -95,27 +116,28 @@ export function openWorkoutForm({ existingWorkout, prefill }) {
           const active = key === sportType;
           const btn = el('button', {
             class: `sport-picker-item${active ? ' active' : ''}`,
-            style: active ? `--tint:${sport.tint};--tint-wash:${sport.tint}26` : '',
-            onclick: () => { sportType = key; renderPicker(); },
+            style: active ? `--tint:${sport.tint}` : '',
+            'aria-pressed': active ? 'true' : 'false',
+            onclick: () => { sportType = key; renderPicker(); applyDistanceUnit(); },
           }, [
-            el('div', { html: icon(sport.icon, { size: 18 }) }),
+            el('div', { html: icon(sport.icon, { size: 22 }) }),
             el('span', {}, sport.displayName),
           ]);
           pickerRow.append(btn);
         }
       }
       renderPicker();
+      applyDistanceUnit();
 
       const dateInput = el('input', { type: 'date', value: toDateInputValue(existingWorkout?.date || prefill?.date || new Date()) });
-      const minInput = el('input', { type: 'number', value: Math.floor(durationTotal / 60) });
-      const secInput = el('input', { type: 'number', value: durationTotal % 60 });
-      const distanceInput = el('input', { type: 'number', step: '0.01', placeholder: 'z. B. 10.5', value: existingWorkout?.distanceKm ?? prefill?.distanceKm ?? '' });
-      const avgHrInput = el('input', { type: 'number', placeholder: 'bpm', value: existingWorkout?.avgHeartRate ?? prefill?.avgHeartRate ?? '' });
-      const maxHrInput = el('input', { type: 'number', placeholder: 'bpm', value: existingWorkout?.maxHeartRate ?? prefill?.maxHeartRate ?? '' });
+      const duration = durationRow('Dauer', durationTotal);
+
+      const avgHrInput = el('input', { type: 'number', inputmode: 'numeric', placeholder: 'bpm', value: existingWorkout?.avgHeartRate ?? prefill?.avgHeartRate ?? '' });
+      const maxHrInput = el('input', { type: 'number', inputmode: 'numeric', placeholder: 'bpm', value: existingWorkout?.maxHeartRate ?? prefill?.maxHeartRate ?? '' });
       let rpe = existingWorkout?.rpe ?? 5;
-      const rpeLabel = el('span', {}, `Anstrengung (RPE ${rpe}/10)`);
-      const rpeInput = el('input', { type: 'range', min: 1, max: 10, step: 1, value: rpe });
-      rpeInput.addEventListener('input', () => { rpe = Number(rpeInput.value); rpeLabel.textContent = `Anstrengung (RPE ${rpe}/10)`; });
+      const rpeLabel = el('span', {}, rpeText(rpe));
+      const rpeInput = el('input', { type: 'range', min: 1, max: 10, step: 1, value: rpe, 'aria-label': 'Anstrengung 1 bis 10' });
+      rpeInput.addEventListener('input', () => { rpe = Number(rpeInput.value); rpeLabel.textContent = rpeText(rpe); });
       const notesInput = el('textarea', { placeholder: 'Wie ist es gelaufen?' }, existingWorkout?.notes || '');
 
       sheet.body.append(
@@ -129,11 +151,9 @@ export function openWorkoutForm({ existingWorkout, prefill }) {
 
         el('div', { class: 'section-title', style: 'margin-top:20px' }, 'Umfang'),
         el('div', { class: 'form-group' }, [
+          duration.row,
           el('div', { class: 'form-row' }, [
-            el('label', { class: 'form-label' }, 'Dauer'), minInput, el('span', { class: 'unit-suffix' }, 'min'), secInput, el('span', { class: 'unit-suffix' }, 'sek'),
-          ]),
-          el('div', { class: 'form-row' }, [
-            el('label', { class: 'form-label' }, 'Distanz'), distanceInput, el('span', { class: 'unit-suffix' }, 'km'),
+            el('label', { class: 'form-label' }, 'Distanz'), distanceInput, distanceUnit,
           ]),
         ]),
 
@@ -151,15 +171,13 @@ export function openWorkoutForm({ existingWorkout, prefill }) {
       );
 
       save = async (close) => {
-        const durMin = Math.max(0, parseInt(minInput.value, 10) || 0);
-        const durSec = Math.max(0, Math.min(59, parseInt(secInput.value, 10) || 0));
         const workout = existingWorkout || {
           id: uuid(), strengthExercises: [], routineName: null, bodyWeightKg: null,
         };
         workout.sportType = sportType;
         workout.date = new Date(dateInput.value + 'T12:00:00').toISOString();
-        workout.durationSeconds = durMin * 60 + durSec;
-        workout.distanceKm = distanceInput.value ? parseFloat(distanceInput.value) : null;
+        workout.durationSeconds = duration.read();
+        workout.distanceKm = distanceKm;
         workout.avgHeartRate = avgHrInput.value ? parseInt(avgHrInput.value, 10) : null;
         workout.maxHeartRate = maxHrInput.value ? parseInt(maxHrInput.value, 10) : null;
         workout.rpe = rpe;
@@ -175,50 +193,50 @@ export function openWorkoutForm({ existingWorkout, prefill }) {
 // ---------- Trainings-Detail ----------
 
 export function openWorkoutDetail(workout) {
+  const isStrength = workout.sportType === 'strength';
   const sheet = openSheet({
     title: workout.routineName || SPORT_TYPES[workout.sportType].displayName,
     leftLabel: 'Fertig',
-    rightIcon: 'ellipsis',
-    onRightIconClick: (e, close) => {
-      const items = [{ label: 'Bearbeiten', icon: 'pencil', onClick: () => {
-        close();
-        if (workout.sportType === 'strength') {
-          import('./strength.js').then(m => m.openStrengthSessionForm({ existingWorkout: workout }));
-        } else {
-          openWorkoutForm({ existingWorkout: workout });
-        }
-      } }];
-      if (workout.sportType === 'strength') {
-        items.push({ label: 'Training wiederholen', icon: 'repeat', onClick: () => {
-          close();
-          import('./strength.js').then(m => m.openStrengthSessionForm({ repeatFrom: workout }));
-        } });
-      }
-      showActionMenu(e.currentTarget, items);
+    saveLabel: 'Bearbeiten',
+    onSave: (close) => {
+      close();
+      if (isStrength) import('./strength.js').then(m => m.openStrengthSessionForm({ existingWorkout: workout }));
+      else openWorkoutForm({ existingWorkout: workout });
     },
     render(s) {
       const sport = SPORT_TYPES[workout.sportType];
+      const headline = sport.tracksDistance && workout.distanceKm
+        ? formatDistance(workout.sportType, workout.distanceKm)
+        : formatDuration(workout.durationSeconds);
       const rows = [];
-      rows.push(['Dauer', formatDuration(workout.durationSeconds)]);
-      if (sport.tracksDistance && workout.distanceKm) rows.push(['Distanz', `${workout.distanceKm.toLocaleString('de-DE', { maximumFractionDigits: 2 })} km`]);
+      if (sport.tracksDistance && workout.distanceKm) rows.push(['Dauer', formatDuration(workout.durationSeconds)]);
       const pace = averagePace(workout);
       if (pace) rows.push([workout.sportType === 'bike' ? 'Ø Geschwindigkeit' : 'Ø Pace', pace]);
       if (workout.bodyWeightKg) rows.push(['Körpergewicht', `${workout.bodyWeightKg.toLocaleString('de-DE', { maximumFractionDigits: 1 })} kg`]);
       if (workout.avgHeartRate) rows.push(['Ø Herzfrequenz', `${workout.avgHeartRate} bpm`]);
       if (workout.maxHeartRate) rows.push(['Max. Herzfrequenz', `${workout.maxHeartRate} bpm`]);
-      if (workout.rpe) rows.push(['Anstrengung (RPE)', `${workout.rpe}/10`]);
+      if (workout.rpe) rows.push(['Anstrengung', rpeText(workout.rpe).replace('Anstrengung ', '')]);
       if (workout.intervalsId) rows.push(['Quelle', 'Garmin Connect']);
 
       s.body.append(
-        el('div', { class: 'card', style: 'display:flex;align-items:center;justify-content:space-between;margin-bottom:16px' }, [
-          sportBadge(workout.sportType, { showsLabel: true, size: 44 }),
-          el('span', { class: 'text-secondary' }, formatDateAbbrev(workout.date)),
+        el('div', { style: 'display:flex;align-items:center;gap:14px;margin:4px 0 20px' }, [
+          sportBadge(workout.sportType, { size: 52 }),
+          el('div', {}, [
+            el('div', { class: 'figure', style: 'font-size:40px;font-weight:800;line-height:1' }, headline),
+            el('div', { class: 'text-secondary', style: 'margin-top:4px' }, `${sport.displayName} · ${formatDateAbbrev(workout.date)}`),
+          ]),
         ]),
-        el('div', { class: 'section-title' }, 'Kennzahlen'),
-        el('div', { class: 'form-group' }, rows.map(([label, value]) =>
-          el('div', { class: 'form-row' }, [el('span', {}, label), el('span', { class: 'text-secondary' }, value)])
-        )),
+        rows.length ? el('div', { class: 'form-group' }, rows.map(([label, value]) =>
+          el('div', { class: 'form-row' }, [el('span', { class: 'form-label' }, label), el('span', { style: 'font-weight:600' }, value)])
+        )) : null,
       );
+
+      if (isStrength) {
+        s.body.append(el('button', {
+          class: 'btn btn-secondary btn-block', style: 'margin-top:16px',
+          onclick: () => { s.close(); import('./strength.js').then(m => m.openStrengthSessionForm({ repeatFrom: workout })); },
+        }, [el('span', { html: icon('repeat', { size: 18 }), style: 'display:flex' }), 'Training wiederholen']));
+      }
 
       if (workout.sportType === 'strength' && workout.strengthExercises?.length) {
         const sorted = [...workout.strengthExercises].sort((a, b) => a.order - b.order);
@@ -226,8 +244,8 @@ export function openWorkoutDetail(workout) {
           el('div', { class: 'section-title', style: 'margin-top:20px' }, 'Übungen'),
           el('div', { class: 'form-group' }, sorted.map(ex => el('div', { class: 'form-row form-row-vertical' }, [
             el('div', { style: 'font-weight:600' }, ex.name),
-            el('div', { class: 'text-secondary', style: 'font-size:13px' }, exerciseSummary(ex)),
-            ex.notes ? el('div', { style: 'font-size:12px;color:var(--text-tertiary)' }, ex.notes) : null,
+            el('div', { class: 'text-secondary', style: 'font-size:15px' }, exerciseSummary(ex)),
+            ex.notes ? el('div', { class: 'text-secondary', style: 'font-size:14px;font-style:italic' }, ex.notes) : null,
           ]))),
         );
       }
@@ -263,21 +281,16 @@ export async function renderLogPage(container) {
   const workouts = (await db.getAll('workouts')).sort((a, b) => new Date(b.date) - new Date(a.date));
   container.innerHTML = '';
 
-  const addBtn = el('button', { class: 'navbar-btn', html: icon('plus', { size: 22 }) });
-  addBtn.addEventListener('click', () => openAddWorkoutMenu(addBtn));
+  const addBtn = fab('Training hinzufügen', openAddWorkoutMenu);
 
   container.append(
     el('div', { class: 'navbar' }, [
-      el('div', { class: 'navbar-row' }, [
-        el('div', { class: 'navbar-spacer' }),
-        el('div', { class: 'navbar-title' }, 'Log'),
-        addBtn,
-      ]),
+      el('div', { class: 'navbar-row' }, [el('h1', { class: 'navbar-title', style: 'margin:0' }, 'Log')]),
     ]),
   );
 
   if (workouts.length === 0) {
-    container.append(emptyState('Noch keine Trainings', 'Trage dein erstes Training ein, um deinen Verlauf zu sehen.', addBtn));
+    container.append(emptyState('Noch keine Trainings', 'Trag dein erstes Training ein oder verbinde Garmin in den Einstellungen.', addBtn));
     return;
   }
 
@@ -291,8 +304,10 @@ export async function renderLogPage(container) {
   const content = el('div', { class: 'content' });
   for (const [month, items] of groups) {
     content.append(
-      el('div', { class: 'section-title' }, month),
-      el('div', { class: 'list' }, items.map(w => workoutRow(w, () => openWorkoutDetail(w)))),
+      el('section', {}, [
+        el('h2', { class: 'section-title', style: 'margin:0' }, month),
+        el('div', { class: 'list' }, items.map(w => workoutRow(w, () => openWorkoutDetail(w)))),
+      ]),
     );
   }
   container.append(content);

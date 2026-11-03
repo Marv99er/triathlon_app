@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:#000;color:#fff;font-family:-apple-system,"SF Pro Text",system-ui,sans-serif}
+h1{font-size:34px;font-weight:700;padding:56px 20px 4px}
+.sub{color:#8E8E93;font-size:15px;padding:0 20px 16px}
+.card{background:#1C1C1E;border-radius:14px;margin:0 16px 12px;padding:16px}
+.rings{display:flex;justify-content:space-around}
+.ring{width:64px;height:64px;border-radius:50%;border:8px solid #333;position:relative}
+.ring span{position:absolute;top:70px;left:50%;transform:translateX(-50%);font-size:12px;color:#8E8E93;white-space:nowrap}
+.k{font-size:13px;color:#8E8E93;text-transform:uppercase;margin-bottom:6px}
+.big{font-size:28px;font-weight:700}
+.li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #2C2C2E;font-size:16px}
+.li:last-child{border:0}
+.li span{color:#8E8E93}
+.tab{position:absolute;bottom:0;left:0;right:0;height:84px;background:#111;border-top:1px solid #222;display:grid;grid-template-columns:repeat(5,1fr);padding-top:10px;text-align:center;font-size:10px;color:#8E8E93}
+.tab .on{color:#0A84FF}
+.tab i{display:block;width:24px;height:24px;margin:0 auto 3px;background:currentColor;border-radius:6px;opacity:.8}
+</style></head><body>
+<h1>Übersicht</h1><div class="sub">Diese Woche · noch 46 Tage bis Kraichgau</div>
+<div class="card" style="padding-bottom:36px"><div class="rings">
+<div class="ring" style="border-color:#0A84FF;border-right-color:#333"><span>Schwimmen</span></div>
+<div class="ring" style="border-color:#FF9F0A;border-bottom-color:#333"><span>Rad</span></div>
+<div class="ring" style="border-color:#30D158"><span>Laufen</span></div>
+<div class="ring" style="border-color:#BF5AF2;border-left-color:#333;border-top-color:#333"><span>Kraft</span></div>
+</div></div>
+<div class="card"><div class="k">Gesamtzeit</div><div class="big">6:45 h</div><div style="color:#30D158;font-size:14px">+12 % ggü. Vorwoche</div></div>
+<div class="card"><div class="k">Letzte Trainings</div>
+<div class="li">Laufen · 10,1 km<span>Mi</span></div>
+<div class="li">Radfahren · 42,5 km<span>Di</span></div>
+<div class="li">Kraft · Oberkörper<span>Di</span></div>
+</div>
+<div class="tab"><div class="on"><i></i>Übersicht</div><div><i></i>Plan</div><div><i></i>Log</div><div><i></i>Kraft</div><div><i></i>Rennen</div></div>
+</body></html>

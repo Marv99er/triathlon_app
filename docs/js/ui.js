@@ -16,7 +16,7 @@ export function openSheet({
   if (noRightButton) {
     rightBtn = el('div', { class: 'navbar-spacer' });
   } else if (rightIcon) {
-    rightBtn = el('button', { class: 'icon-btn', html: icon(rightIcon, { size: 22 }), onclick: (e) => onRightIconClick && onRightIconClick(e, close) });
+    rightBtn = el('button', { class: 'icon-btn', 'aria-label': rightIcon === 'ellipsis' ? 'Weitere Aktionen' : rightIcon, html: icon(rightIcon, { size: 22 }), onclick: (e) => onRightIconClick && onRightIconClick(e, close) });
   } else {
     rightBtn = el('button', {
       class: 'navbar-btn bold',
@@ -57,6 +57,43 @@ export function openSheet({
   return api;
 }
 
+// ---------- Dauerfeld h:mm:ss (Trainings und Rennen nutzen dasselbe) ----------
+
+export function durationRow(label, seconds) {
+  const total = seconds || 0;
+  const pad = (n) => String(n).padStart(2, '0');
+  const field = (aria, value, placeholder) => el('input', { type: 'number', inputmode: 'numeric', min: '0', 'aria-label': aria, value, placeholder });
+  const inputs = {
+    h: field('Stunden', total ? Math.floor(total / 3600) : '', 'h'),
+    m: field('Minuten', total ? pad(Math.floor((total % 3600) / 60)) : '', 'mm'),
+    s: field('Sekunden', total ? pad(total % 60) : '', 'ss'),
+  };
+  const row = el('div', { class: 'form-row' }, [
+    el('label', { class: 'form-label' }, label),
+    el('div', { class: 'duration-field' }, [inputs.h, el('span', {}, ':'), inputs.m, el('span', {}, ':'), inputs.s]),
+  ]);
+  const read = () => {
+    const v = (i) => Math.max(0, parseInt(i.value, 10) || 0);
+    return v(inputs.h) * 3600 + v(inputs.m) * 60 + Math.min(59, v(inputs.s));
+  };
+  return { row, read, inputs };
+}
+
+// ---------- Hauptaktion: das + in der Mitte der Tab-Leiste, jede Seite legt fest, was es tut ----------
+
+let primaryAction = null;
+
+export function fab(label, onClick) {
+  const btn = document.getElementById('primary-action');
+  btn.setAttribute('aria-label', label);
+  primaryAction = onClick;
+  return btn;
+}
+
+export function triggerPrimaryAction(btn) {
+  if (primaryAction) primaryAction(btn);
+}
+
 // ---------- Action menu (ersetzt SwiftUI Menu) ----------
 
 let openMenuCleanup = null;
@@ -71,7 +108,7 @@ export function showActionMenu(anchorEl, items) {
         class: item.destructive ? 'destructive' : '',
         onclick: () => { closeActionMenu(); item.onClick(); },
       }, [
-        el('span', { html: icon(item.icon, { size: 18 }) }),
+        el('span', { html: icon(item.icon, { size: 20 }), style: 'display:flex;color:var(--text-secondary)', 'aria-hidden': 'true' }),
         el('span', {}, item.label),
       ])
     );
@@ -83,7 +120,7 @@ export function showActionMenu(anchorEl, items) {
   let left = rect.right - menuWidth;
   left = Math.max(8, Math.min(left, window.innerWidth - menuWidth - 8));
   let top = rect.bottom + 6;
-  if (top + 200 > window.innerHeight) top = rect.top - 6 - items.length * 44;
+  if (top + items.length * 52 + 8 > window.innerHeight) top = rect.top - 6 - items.length * 52;
   menu.style.left = `${left}px`;
   menu.style.top = `${top}px`;
 

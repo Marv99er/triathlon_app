@@ -1,6 +1,6 @@
 import { el } from './utils.js';
 import { icon } from './icons.js';
-import { showActionMenu, showConfirm, showToast } from './ui.js';
+import { showActionMenu, showConfirm, showToast, fab } from './ui.js';
 import { db, uuid } from './db.js';
 
 let currentObjectUrl = null;
@@ -23,7 +23,13 @@ export async function renderPlanPage(container) {
     renderPlanPage(container);
   }
 
-  const menuBtn = el('button', { class: 'navbar-btn', html: icon(document_ ? 'ellipsis' : 'plus', { size: 22 }) });
+  const menuBtn = el('button', { class: 'navbar-btn', 'aria-label': document_ ? 'Plan ersetzen oder löschen' : 'Plan hochladen', html: icon(document_ ? 'ellipsis' : 'plus', { size: 24 }) });
+  const backBtn = el('button', {
+    class: 'navbar-btn', style: 'padding-left:0', 'aria-label': 'Zurück zur Woche',
+    html: icon('chevronLeft', { size: 26 }),
+    onclick: () => window.dispatchEvent(new CustomEvent('trilog-show-page', { detail: 'dashboard' })),
+  });
+  fab(document_ ? 'Plan ersetzen' : 'Plan hochladen', () => menuBtn.click());
   menuBtn.addEventListener('click', () => {
     const items = [
       { label: 'Foto auswählen', icon: 'photo', onClick: () => photoInput.click() },
@@ -45,7 +51,7 @@ export async function renderPlanPage(container) {
 
   container.append(
     el('div', { class: 'navbar' }, [
-      el('div', { class: 'navbar-row' }, [el('div', { class: 'navbar-spacer' }), el('div', { class: 'navbar-title' }, 'Trainingsplan'), menuBtn]),
+      el('div', { class: 'navbar-row', style: 'padding-left:4px' }, [backBtn, el('h1', { class: 'navbar-title', style: 'margin:0' }, 'Trainingsplan'), menuBtn]),
     ]),
     photoInput, pdfInput,
   );

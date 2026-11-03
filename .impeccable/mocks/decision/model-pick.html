@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F4F1EA;--grid:#DCD6C8;--ink:#1E2328;--muted:#6B6F73;--swim:#2B6CB0;--bike:#D9822B;--run:#2F9E5B;--str:#8E5BD6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:var(--paper);color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.top{padding:54px 20px 12px;display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink)}
+.top h1{font:800 26px Archivo}
+.top span{font-size:13px;color:var(--muted)}
+.race{display:flex;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--grid);font-size:14px}
+.race b{font-weight:800}
+.sheet{margin:14px 16px 0;display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--ink);background:repeating-linear-gradient(0deg,transparent 0 23px,var(--grid) 23px 24px)}
+.col{border-right:1px solid var(--grid);height:300px;display:flex;flex-direction:column;gap:4px;padding:4px 3px}
+.col:last-child{border:0}
+.hd{font:700 12px Archivo;text-align:center;padding:4px 0;border-bottom:1px solid var(--ink);background:var(--paper)}
+.today .hd{background:var(--ink);color:var(--paper)}
+.blk{border-radius:3px;color:#fff;font:700 10px Archivo;padding:3px}
+.plan{border:1.5px dashed currentColor;background:transparent!important}
+.sum{margin:16px 16px 0;border-top:2px solid var(--ink)}
+.sr{display:grid;grid-template-columns:1fr auto auto;gap:16px;padding:11px 4px;border-bottom:1px solid var(--grid);font-size:15px}
+.sr b{font-weight:800}
+.sr i{font-style:normal;color:var(--muted);font-size:13px}
+.tab{position:absolute;left:0;right:0;bottom:0;height:84px;border-top:2px solid var(--ink);background:var(--paper);display:grid;grid-template-columns:repeat(4,1fr);padding-top:12px;text-align:center;font:700 11px Archivo;color:var(--muted)}
+.tab .on{color:var(--ink)}
+.tab i{display:block;width:22px;height:22px;margin:0 auto 4px;border:2px solid currentColor}
+</style></head><body>
+<div class="top"><h1>KW 45</h1><span>2.–8. Nov.</span></div>
+<div class="race"><span>Ironman 70.3 Kraichgau</span><b>noch 46 Tage</b></div>
+<div class="sheet">
+<div class="col"><div class="hd">Mo</div><div class="blk" style="background:var(--swim);height:44px">2,2 km</div></div>
+<div class="col"><div class="hd">Di</div><div class="blk" style="background:var(--bike);height:88px">42 km</div><div class="blk" style="background:var(--str);height:52px">Kraft</div></div>
+<div class="col today"><div class="hd">Mi</div><div class="blk" style="background:var(--run);height:50px">10 km</div></div>
+<div class="col"><div class="hd">Do</div><div class="blk plan" style="color:var(--swim);height:44px">Swim</div></div>
+<div class="col"><div class="hd">Fr</div><div class="blk plan" style="color:var(--run);height:70px">Lauf</div></div>
+<div class="col"><div class="hd">Sa</div><div class="blk plan" style="color:var(--bike);height:140px">Rad lang</div></div>
+<div class="col"><div class="hd">So</div><div class="blk plan" style="color:var(--run);height:90px">Long Run</div></div>
+</div>
+<div class="sum">
+<div class="sr"><span><b style="color:var(--swim)">■</b> Schwimmen</span><b>2.200 m</b><i>−8 %</i></div>
+<div class="sr"><span><b style="color:var(--bike)">■</b> Rad</span><b>42,5 km</b><i>+5 %</i></div>
+<div class="sr"><span><b style="color:var(--run)">■</b> Laufen</span><b>10,1 km</b><i>+3 %</i></div>
+<div class="sr"><span><b style="color:var(--str)">■</b> Kraft</span><b>55 min</b><i>±0</i></div>
+</div>
+<div class="tab"><div class="on"><i></i>Woche</div><div><i></i>Log</div><div><i></i>Kraft</div><div><i></i>Rennen</div></div>
+</body></html>

@@ -1,6 +1,6 @@
-import { el, SPORT_TYPES, formatDateAbbrev, formatClock, toDateInputValue } from './utils.js';
+import { el, SPORT_TYPES, formatDateAbbrev, formatDateShort, formatClock, formatDistance, daysUntil, toDateInputValue } from './utils.js';
 import { icon } from './icons.js';
-import { openSheet, showConfirm } from './ui.js';
+import { openSheet, showConfirm, fab } from './ui.js';
 import { db, uuid } from './db.js';
 import { emptyState } from './log.js';
 
@@ -10,9 +10,9 @@ export function setOnDataChanged(fn) { onDataChanged = fn; }
 function timeFields(prefix, seconds) {
   const total = seconds || 0;
   return {
-    h: el('input', { type: 'number', value: Math.floor(total / 3600), placeholder: 'hh' }),
-    m: el('input', { type: 'number', value: Math.floor((total % 3600) / 60), placeholder: 'mm' }),
-    s: el('input', { type: 'number', value: total % 60, placeholder: 'ss' }),
+    h: el('input', { type: 'number', inputmode: 'numeric', 'aria-label': 'Stunden', value: total ? Math.floor(total / 3600) : '', placeholder: 'h' }),
+    m: el('input', { type: 'number', inputmode: 'numeric', 'aria-label': 'Minuten', value: total ? String(Math.floor((total % 3600) / 60)).padStart(2, '0') : '', placeholder: 'mm' }),
+    s: el('input', { type: 'number', inputmode: 'numeric', 'aria-label': 'Sekunden', value: total ? String(total % 60).padStart(2, '0') : '', placeholder: 'ss' }),
   };
 }
 
@@ -30,37 +30,91 @@ function durationFieldRow(label, fields) {
   ]);
 }
 
+const isUpcoming = (c) => daysUntil(c.date) >= 0;
+
+export function nextRace(competitions) {
+  return competitions.filter(isUpcoming).sort((a, b) => new Date(a.date) - new Date(b.date))[0] || null;
+}
+
+function raceKind(c) {
+  if (c.isTriathlon) return 'Triathlon';
+  const sport = c.sportType ? SPORT_TYPES[c.sportType].displayName : 'Wettkampf';
+  return c.distanceKm ? `${sport} · ${formatDistance(c.sportType, c.distanceKm)}` : sport;
+}
+
+// Startnummer: das nächste Rennen mit Countdown in Tagen, die eingetragene Zeit gilt als Ziel
+export function raceBib(race, { interactive = true } = {}) {
+  if (!race) {
+    return el('div', { class: 'bib empty' }, [
+      el('div', { class: 'bib-head' }, [el('span', {}, 'Kein Rennen geplant')]),
+      el('p', {}, 'Trag dein nächstes Rennen ein, dann zählt TriLog die Tage bis zum Start.'),
+      el('button', { class: 'btn btn-primary', onclick: () => openCompetitionForm({}) }, 'Rennen eintragen'),
+    ]);
+  }
+  const days = daysUntil(race.date);
+  const weeks = Math.floor(days / 7);
+  const rest = days % 7;
+  const span = days === 0 ? 'Heute ist Renntag' : weeks > 0 ? `${weeks} Wo${rest ? ` ${rest} T` : ''}` : `${days} ${days === 1 ? 'Tag' : 'Tage'}`;
+  return el('div', {
+    class: `bib${interactive ? '' : ' static'}`, role: interactive ? 'button' : null, tabindex: interactive ? '0' : null,
+    'aria-label': `Nächstes Rennen: ${race.name}, in ${days} Tagen`,
+    onclick: interactive ? () => openCompetitionDetail(race) : null,
+  }, [
+    el('div', { class: 'bib-head' }, [el('span', {}, race.name), el('span', {}, formatDateShort(race.date))]),
+    el('div', { class: 'bib-number' }, [
+      el('span', { class: 'n' }, String(days)),
+      el('span', { class: 'u' }, days === 1 ? 'Tag' : 'Tage'),
+    ]),
+    el('div', { class: 'bib-band' }, [
+      el('span', {}, race.totalDurationSeconds ? `Ziel ${formatClock(race.totalDurationSeconds)}` : raceKind(race)),
+      el('span', {}, span),
+    ]),
+  ]);
+}
+
 export async function renderCompetitionsPage(container) {
   const competitions = (await db.getAll('competitions')).sort((a, b) => new Date(b.date) - new Date(a.date));
   container.innerHTML = '';
 
-  const addBtn = el('button', { class: 'navbar-btn', html: icon('plus', { size: 22 }), onclick: () => openCompetitionForm({}) });
+  const addBtn = fab('Rennen eintragen', () => openCompetitionForm({}));
   container.append(
     el('div', { class: 'navbar' }, [
-      el('div', { class: 'navbar-row' }, [el('div', { class: 'navbar-spacer' }), el('div', { class: 'navbar-title' }, 'Wettkämpfe'), addBtn]),
+      el('div', { class: 'navbar-row' }, [el('h1', { class: 'navbar-title', style: 'margin:0' }, 'Rennen')]),
     ]),
   );
 
   if (competitions.length === 0) {
-    container.append(emptyState('Noch kein Wettkampf', 'Trage deinen letzten Wettkampf ein, um deine Zeiten im Blick zu behalten.', addBtn, 'flagCheckered', 'Wettkampf hinzufügen'));
+    container.append(emptyState('Noch kein Rennen', 'Trag dein nächstes Rennen oder ein vergangenes Ergebnis ein.', addBtn, 'flagCheckered', 'Rennen eintragen'));
     return;
   }
 
-  const [latest, ...history] = competitions;
+  const upcoming = competitions.filter(isUpcoming).reverse();
+  const results = competitions.filter(c => !isUpcoming(c));
   const content = el('div', { class: 'content' });
 
   content.append(
-    el('div', {}, [
-      el('div', { class: 'section-title' }, 'Letzter Wettkampf'),
-      heroCard(latest),
+    el('section', {}, [
+      el('h2', { class: 'section-title', style: 'margin:0' }, 'Nächstes Rennen'),
+      raceBib(upcoming[0] || null),
     ]),
   );
 
-  if (history.length) {
+  if (upcoming.length > 1) {
     content.append(
-      el('div', {}, [
-        el('div', { class: 'section-title' }, 'Verlauf'),
-        el('div', { class: 'list' }, history.map(c => competitionRow(c))),
+      el('section', {}, [
+        el('h2', { class: 'section-title', style: 'margin:0' }, 'Danach'),
+        el('div', { class: 'list' }, upcoming.slice(1).map(c => competitionRow(c, `in ${daysUntil(c.date)} Tagen`))),
+      ]),
+    );
+  }
+
+  if (results.length) {
+    const [latest, ...older] = results;
+    content.append(
+      el('section', {}, [
+        el('h2', { class: 'section-title', style: 'margin:0' }, 'Ergebnisse'),
+        resultCard(latest),
+        older.length ? el('div', { class: 'list', style: 'margin-top:12px' }, older.map(c => competitionRow(c, formatClock(c.totalDurationSeconds)))) : null,
       ]),
     );
   }
@@ -68,58 +122,62 @@ export async function renderCompetitionsPage(container) {
   container.append(content);
 }
 
-function heroCard(c) {
-  const icn = c.isTriathlon ? 'trophy' : (c.sportType ? SPORT_TYPES[c.sportType].icon : 'flagCheckered');
-  const card = el('div', {
-    class: 'hero-card', style: 'display:flex;flex-direction:column;gap:12px;cursor:pointer',
-    onclick: () => openCompetitionForm({ existingCompetition: c }),
-  });
-  card.append(
-    el('div', { style: 'display:flex;align-items:center;gap:8px' }, [
-      el('span', { html: icon(icn, { size: 18 }), style: 'color:#FF9F0A' }),
-      el('span', { style: 'font-weight:600;flex:1' }, c.name),
-      el('span', { class: 'text-secondary', style: 'font-size:13px' }, formatDateAbbrev(c.date)),
+function resultCard(c, { interactive = true } = {}) {
+  const card = el('div', { class: `result${interactive ? '' : ' static'}`, role: interactive ? 'button' : null, tabindex: interactive ? '0' : null, onclick: interactive ? () => openCompetitionDetail(c) : null }, [
+    el('div', { class: 'result-head' }, [
+      el('span', { class: 'result-name' }, c.name),
+      el('span', { class: 'result-date' }, formatDateAbbrev(c.date)),
     ]),
-    el('div', { style: 'font-size:40px;font-weight:700' }, formatClock(c.totalDurationSeconds)),
-  );
+    el('div', { class: 'result-time' }, formatClock(c.totalDurationSeconds)),
+    el('div', { class: 'result-meta' }, [raceKind(c), c.placement ? `Platz ${c.placement}` : null].filter(Boolean).join(' · ')),
+  ]);
 
+  // Feste Abfolge Swim · T1 · Bike · T2 · Run: fehlende Splits bleiben als Lücke sichtbar
   if (c.isTriathlon) {
-    const splits = [];
-    if (c.swimDurationSeconds) splits.push(['Schwimmen', c.swimDurationSeconds]);
-    if (c.bikeDurationSeconds) splits.push(['Rad', c.bikeDurationSeconds]);
-    if (c.runDurationSeconds) splits.push(['Lauf', c.runDurationSeconds]);
-    if (splits.length) {
-      card.append(el('div', { style: 'display:flex;gap:20px' }, splits.map(([label, sec]) =>
-        el('div', {}, [
-          el('div', { style: 'font-size:11px;color:var(--text-secondary)' }, label),
-          el('div', { style: 'font-size:13px;font-weight:600' }, formatClock(sec)),
-        ])
-      )));
-    }
-  } else if (c.distanceKm) {
-    card.append(el('div', { class: 'text-secondary', style: 'font-size:14px' }, `${c.distanceKm.toLocaleString('de-DE', { maximumFractionDigits: 2 })} km`));
+    const legs = [
+      ['Swim', c.swimDurationSeconds, 'swim'], ['T1', c.t1DurationSeconds], ['Bike', c.bikeDurationSeconds, 'bike'],
+      ['T2', c.t2DurationSeconds], ['Run', c.runDurationSeconds, 'run'],
+    ];
+    card.append(el('div', { class: 'splits' }, legs.map(([label, sec, sport]) =>
+      el('div', { class: 'split' }, [
+        el('div', { class: 'k' }, [sport ? el('span', { class: 'cap', style: `background:${SPORT_TYPES[sport].tint}` }) : null, label]),
+        el('div', { class: `t${sec ? '' : ' missing'}` }, sec ? formatClock(sec) : '–'),
+      ])
+    )));
   }
-
-  if (c.placement) {
-    card.append(el('div', { class: 'text-secondary', style: 'font-size:12px' }, `Platzierung: ${c.placement}`));
-  }
-
   return card;
 }
 
-function competitionRow(c) {
-  const icn = c.isTriathlon ? 'trophy' : (c.sportType ? SPORT_TYPES[c.sportType].icon : 'flagCheckered');
-  return el('div', { class: 'list-row', onclick: () => openCompetitionForm({ existingCompetition: c }) }, [
-    el('div', { style: 'width:36px;height:36px;border-radius:999px;background:#FF9F0A26;color:#FF9F0A;display:flex;align-items:center;justify-content:center;flex-shrink:0', html: icon(icn, { size: 16 }) }),
+function competitionRow(c, trailing) {
+  return el('div', { class: 'list-row', role: 'button', tabindex: '0', onclick: () => openCompetitionDetail(c) }, [
     el('div', { class: 'list-row-main' }, [
       el('div', { class: 'list-row-title' }, c.name),
-      el('div', { class: 'list-row-subtitle' }, formatDateAbbrev(c.date)),
+      el('div', { class: 'list-row-subtitle' }, `${formatDateAbbrev(c.date)} · ${raceKind(c)}`),
     ]),
-    el('div', { class: 'list-row-trailing', style: 'font-weight:600;color:var(--text)' }, formatClock(c.totalDurationSeconds)),
+    el('div', { class: 'list-row-trailing figure', style: 'font-size:20px;font-weight:700;color:var(--text)' }, trailing),
   ]);
 }
 
-function openCompetitionForm({ existingCompetition }) {
+// Tippen zeigt erst das Rennen; Bearbeiten liegt oben rechts (gleiche Regel wie bei Trainings)
+function openCompetitionDetail(c) {
+  openSheet({
+    title: c.name,
+    leftLabel: 'Fertig',
+    saveLabel: 'Bearbeiten',
+    onSave: (close) => { close(); openCompetitionForm({ existingCompetition: c }); },
+    render(sheet) {
+      sheet.body.append(isUpcoming(c) ? raceBib(c, { interactive: false }) : resultCard(c, { interactive: false }));
+      if (c.notes) {
+        sheet.body.append(
+          el('div', { class: 'section-title', style: 'margin-top:24px' }, 'Notizen'),
+          el('div', { class: 'card' }, c.notes),
+        );
+      }
+    },
+  });
+}
+
+export function openCompetitionForm({ existingCompetition }) {
   const isEditing = !!existingCompetition;
   let isTriathlon = existingCompetition?.isTriathlon || false;
   let sportType = existingCompetition?.sportType || 'run';
@@ -180,6 +238,14 @@ function openCompetitionForm({ existingCompetition }) {
       sportSelect.addEventListener('change', () => { sportType = sportSelect.value; renderDiscipline(); });
       triToggle.addEventListener('change', () => { isTriathlon = triToggle.checked; renderDiscipline(); renderSplits(); });
 
+      // Liegt das Rennen in der Zukunft, ist die eingetragene Zeit das Ziel
+      const timeTitle = el('div', { class: 'section-title', style: 'margin-top:24px' });
+      const updateTimeTitle = () => {
+        timeTitle.textContent = daysUntil(dateInput.value + 'T12:00:00') > 0 ? 'Zielzeit (h:mm:ss)' : 'Gesamtzeit (h:mm:ss)';
+      };
+      dateInput.addEventListener('change', updateTimeTitle);
+      updateTimeTitle();
+
       const placementInput = el('input', { type: 'number', placeholder: 'optional', value: existingCompetition?.placement ?? '' });
       const notesInput = el('textarea', { placeholder: 'Notizen' }, existingCompetition?.notes || '');
 
@@ -191,7 +257,7 @@ function openCompetitionForm({ existingCompetition }) {
           el('div', { class: 'form-row' }, [el('label', { class: 'form-label' }, 'Triathlon mit Einzelzeiten'), triToggle]),
         ]),
         disciplineSection,
-        el('div', { class: 'section-title', style: 'margin-top:20px' }, 'Gesamtzeit (hh:mm:ss)'),
+        timeTitle,
         el('div', { class: 'form-group' }, [durationFieldRow('Zeit', totalFields)]),
         splitSection,
         el('div', { class: 'section-title', style: 'margin-top:20px' }, 'Sonstiges'),

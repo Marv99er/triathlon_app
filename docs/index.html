@@ -2,16 +2,19 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>TriLog</title>
   <meta name="description" content="Trainings-Tracker für Triathlon und Kraftsport">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#111315">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="TriLog">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <link rel="icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -22,13 +25,7 @@
     <section class="page" id="page-strength"></section>
     <section class="page" id="page-competitions"></section>
 
-    <nav class="tabbar" id="tabbar">
-      <button class="tab-item active" data-page="dashboard"></button>
-      <button class="tab-item" data-page="plan"></button>
-      <button class="tab-item" data-page="log"></button>
-      <button class="tab-item" data-page="strength"></button>
-      <button class="tab-item" data-page="competitions"></button>
-    </nav>
+    <nav class="tabbar" id="tabbar" aria-label="Hauptnavigation"></nav>
   </div>
 
   <div id="overlays"></div>

@@ -1,9 +1,39 @@
 export const SPORT_TYPES = {
-  swim: { displayName: 'Schwimmen', tint: '#0A84FF', icon: 'swim', tracksDistance: true },
-  bike: { displayName: 'Radfahren', tint: '#FF9F0A', icon: 'bike', tracksDistance: true },
-  run: { displayName: 'Laufen', tint: '#30D158', icon: 'run', tracksDistance: true },
-  strength: { displayName: 'Kraft', tint: '#BF5AF2', icon: 'strength', tracksDistance: false },
+  swim: { displayName: 'Schwimmen', shortName: 'Swim', tint: 'var(--swim)', icon: 'swim', tracksDistance: true },
+  bike: { displayName: 'Rad', shortName: 'Bike', tint: 'var(--bike)', icon: 'bike', tracksDistance: true },
+  run: { displayName: 'Laufen', shortName: 'Run', tint: 'var(--run)', icon: 'run', tracksDistance: true },
+  strength: { displayName: 'Kraft', shortName: 'Kraft', tint: 'var(--strength)', icon: 'strength', tracksDistance: false },
 };
+
+// Schwimmen wird in Metern gedacht, Rad und Lauf in Kilometern.
+export function formatDistance(sportType, km) {
+  if (sportType === 'swim') return `${formatNumber(Math.round(km * 1000), 0, 0)} m`;
+  return `${formatNumber(km, 0, 1)} km`;
+}
+
+export function formatHours(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.round((totalSeconds % 3600) / 60);
+  return hours > 0 ? `${hours}:${String(minutes).padStart(2, '0')} h` : `${minutes} min`;
+}
+
+export function isoWeekNumber(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const day = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+}
+
+export function startOfDay(date) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+export function daysUntil(date) {
+  return Math.round((startOfDay(date) - startOfDay(new Date())) / 86400000);
+}
 
 export const SELECTABLE_SPORTS = ['swim', 'bike', 'run'];
 export const WEEKDAY_NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
@@ -93,7 +123,8 @@ export function endOfMonth(date) {
 
 export function exerciseSummary(exercise) {
   return exercise.sets
-    .map(set => (set.weightKg != null ? `${set.reps ?? '–'}×${formatNumber(set.weightKg, 0, 1)}kg` : `${set.reps ?? '–'}×`))
+    // Ohne Zusatzgewicht (z. B. Klimmzüge) nur die Wiederholungen statt "8×0kg"
+    .map(set => (set.weightKg ? `${set.reps ?? '–'}×${formatNumber(set.weightKg, 0, 1)} kg` : `${set.reps ?? '–'} Wdh.`))
     .join(', ');
 }
 

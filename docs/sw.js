@@ -1,4 +1,5 @@
-const CACHE_NAME = 'trilog-v4';
+const CACHE_NAME = 'trilog-v8';
+const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 const PRECACHE_URLS = [
   './',
   'index.html',
@@ -38,8 +39,22 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url);
+  // Schriften ändern sich nie: einmal laden, dann offline aus dem Cache
+  if (FONT_HOSTS.includes(url.hostname)) {
+    event.respondWith(
+      caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+        if (response && (response.ok || response.type === 'opaque')) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
+        return response;
+      }))
+    );
+    return;
+  }
   // Fremde Adressen (z. B. intervals.icu-API) nie zwischenspeichern, sonst erscheinen alte Daten.
-  if (new URL(event.request.url).origin !== self.location.origin) return;
+  if (url.origin !== self.location.origin) return;
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)

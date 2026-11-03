@@ -1,7 +1,8 @@
-import { el, WEEKDAY_NAMES, WEEKDAY_SHORT, weekdayFromDate, startOfMonth, endOfMonth, formatMonthYear, formatDateAbbrev, exerciseSummary, toDateTimeInputValue } from './utils.js';
+import { el, WEEKDAY_NAMES, WEEKDAY_SHORT, weekdayFromDate, startOfMonth, endOfMonth, formatMonthYear, formatDateAbbrev, formatDateShort, exerciseSummary, toDateTimeInputValue } from './utils.js';
 import { icon } from './icons.js';
-import { openSheet, showActionMenu, showConfirm } from './ui.js';
+import { openSheet, showActionMenu, showConfirm, fab } from './ui.js';
 import { db, uuid } from './db.js';
+import { rpeText } from './log.js';
 
 let onDataChanged = () => {};
 export function setOnDataChanged(fn) { onDataChanged = fn; }
@@ -14,46 +15,62 @@ export async function renderStrengthPage(container) {
 
   container.append(
     el('div', { class: 'navbar' }, [
-      el('div', { class: 'navbar-row' }, [el('div', { class: 'navbar-spacer' }), el('div', { class: 'navbar-title' }, 'Kraft'), el('div', { class: 'navbar-spacer' })]),
+      el('div', { class: 'navbar-row' }, [el('h1', { class: 'navbar-title', style: 'margin:0' }, 'Kraft')]),
     ]),
   );
+  fab('Freies Krafttraining starten', () => openStrengthSessionForm({}));
 
+  // Tippen auf eine Routine startet das Training; Bearbeiten liegt auf dem Stift daneben.
+  const todayWeekday = weekdayFromDate(new Date());
   const weekGroup = el('div', { class: 'list' });
   for (let weekday = 1; weekday <= 7; weekday++) {
     const routine = routines.find(r => r.assignedWeekday === weekday);
-    const row = el('div', {
-      class: 'weekday-row',
-      onclick: () => {
-        if (routine) openRoutineEditor({ existingRoutine: routine });
-        else openRoutineEditor({ prefillWeekday: weekday });
-      },
-    }, [
-      el('span', { class: 'weekday-label' }, WEEKDAY_SHORT[weekday - 1]),
-      routine
-        ? el('span', { class: 'routine-name' }, routine.name)
-        : el('span', { class: 'placeholder' }, '–'),
-      routine ? el('button', {
-        class: 'start-btn',
-        onclick: (e) => { e.stopPropagation(); openStrengthSessionForm({ routine }); },
-      }, 'Training starten') : null,
-    ]);
+    const isToday = weekday === todayWeekday;
+    const label = el('span', { class: 'weekday-label' }, WEEKDAY_SHORT[weekday - 1]);
+    let row;
+    if (routine) {
+      row = el('div', {
+        class: `weekday-row${isToday ? ' today' : ''}`, role: 'button', tabindex: '0',
+        'aria-label': `${routine.name} starten`,
+        onclick: () => openStrengthSessionForm({ routine }),
+      }, [
+        label,
+        el('div', { class: 'routine-name' }, [
+          el('div', { style: 'font-weight:600' }, routine.name),
+          el('div', { class: 'text-secondary', style: 'font-size:14px;margin-top:1px' },
+            isToday ? 'Heute · tippen zum Starten' : `${routine.exerciseNames.length} Übungen`),
+        ]),
+        el('button', {
+          class: 'icon-btn', style: 'color:var(--text-secondary)', 'aria-label': `${routine.name} bearbeiten`,
+          html: icon('pencil', { size: 20 }),
+          onclick: (e) => { e.stopPropagation(); openRoutineEditor({ existingRoutine: routine }); },
+        }),
+        el('span', { class: 'start-icon', html: icon('play', { size: 22 }), 'aria-hidden': 'true' }),
+      ]);
+    } else {
+      row = el('div', {
+        class: `weekday-row${isToday ? ' today' : ''}`, role: 'button', tabindex: '0',
+        onclick: () => openRoutineEditor({ prefillWeekday: weekday }),
+      }, [
+        label,
+        el('span', { class: 'placeholder' }, 'Routine anlegen'),
+        el('span', { class: 'list-row-chevron', html: icon('plus', { size: 20 }) }),
+      ]);
+    }
     weekGroup.append(row);
   }
 
   const actionsGroup = el('div', { class: 'list' }, [
-    el('div', { class: 'list-row', onclick: () => openStrengthSessionForm({}) }, [
-      el('span', { html: icon('plus', { size: 20 }), style: 'color:var(--accent)' }),
-      el('span', { class: 'list-row-main' }, 'Freies Training loggen'),
-    ]),
-    el('div', { class: 'list-row', onclick: () => openStrengthMonthOverview() }, [
-      el('span', { html: icon('calendar', { size: 20 }), style: 'color:var(--accent)' }),
-      el('span', { class: 'list-row-main' }, 'Monatsübersicht'),
+    el('div', { class: 'list-row', role: 'button', tabindex: '0', onclick: () => openStrengthMonthOverview() }, [
+      el('span', { html: icon('calendar', { size: 22 }), style: 'color:var(--text-secondary);display:flex' }),
+      el('span', { class: 'list-row-main list-row-title' }, 'Monatsübersicht'),
+      el('span', { class: 'list-row-chevron', html: icon('chevronRight', { size: 20 }) }),
     ]),
   ]);
 
   container.append(
     el('div', { class: 'content' }, [
-      el('div', {}, [el('div', { class: 'section-title' }, 'Wochenplan'), weekGroup]),
+      el('section', {}, [el('h2', { class: 'section-title', style: 'margin:0' }, 'Wochenplan'), weekGroup]),
       actionsGroup,
     ]),
   );
@@ -159,16 +176,12 @@ function newSet({ weightKg = null, reps = null, ghost = null } = {}) {
 export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }) {
   const isEditing = !!existingWorkout;
   let sessionName = existingWorkout?.routineName || repeatFrom?.routineName || routine?.name || '';
-  let startTime, endTime;
+  // Neue Einheiten starten jetzt; ohne Endzeit gilt beim Sichern die aktuelle Uhrzeit (live im Studio mitloggen).
+  let startTime = new Date();
+  let endTime = null;
   if (existingWorkout) {
     startTime = new Date(existingWorkout.date);
     endTime = new Date(startTime.getTime() + existingWorkout.durationSeconds * 1000);
-  } else if (repeatFrom) {
-    startTime = new Date();
-    endTime = new Date(startTime.getTime() + repeatFrom.durationSeconds * 1000);
-  } else {
-    startTime = new Date();
-    endTime = new Date(startTime.getTime() + 45 * 60 * 1000);
   }
   let bodyWeightKg = existingWorkout?.bodyWeightKg ?? null;
   let rpe = existingWorkout?.rpe ?? 5;
@@ -203,13 +216,13 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
     async render(sheet) {
       const allWorkouts = (await allWorkoutsPromise).filter(w => w.id !== existingWorkout?.id);
 
-      function lastPerformance(name) {
+      function lastExercise(name) {
         const trimmed = name.trim();
         if (!trimmed) return null;
         const sorted = [...allWorkouts].sort((a, b) => new Date(b.date) - new Date(a.date));
         for (const w of sorted) {
           const match = (w.strengthExercises || []).find(e => e.name.toLowerCase() === trimmed.toLowerCase());
-          if (match) return exerciseSummary(match);
+          if (match) return { ...match, date: w.date };
         }
         return null;
       }
@@ -218,11 +231,19 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
       nameInput.style.textAlign = 'left';
       nameInput.addEventListener('input', () => { sessionName = nameInput.value; sheet.setTitle(sessionName || 'Krafttraining'); });
 
+      // Routine gestartet: die Sätze vom letzten Mal stehen als Platzhalter in den Feldern
+      if (routine && !existingWorkout && !repeatFrom) {
+        for (const ex of exercises) {
+          const prev = lastExercise(ex.name);
+          if (prev?.sets.length) ex.sets = prev.sets.map(s => newSet({ ghost: { weightKg: s.weightKg ?? null, reps: s.reps ?? null } }));
+        }
+      }
+
       const startInput = el('input', { type: 'datetime-local', value: toDateTimeInputValue(startTime) });
-      const endInput = el('input', { type: 'datetime-local', value: toDateTimeInputValue(endTime) });
+      const endInput = el('input', { type: 'datetime-local', value: endTime ? toDateTimeInputValue(endTime) : '' });
       startInput.addEventListener('change', () => {
         const newStart = new Date(startInput.value);
-        if (new Date(endInput.value) < newStart) endInput.value = toDateTimeInputValue(newStart);
+        if (endInput.value && new Date(endInput.value) < newStart) endInput.value = toDateTimeInputValue(newStart);
       });
 
       const bodyWeightInput = el('input', { type: 'number', step: '0.1', placeholder: 'optional', value: bodyWeightKg ?? '' });
@@ -233,7 +254,7 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
         const nameField = el('input', { type: 'text', placeholder: 'Übungsname', value: ex.name });
         nameField.addEventListener('input', () => { ex.name = nameField.value; });
 
-        const kebabBtn = el('button', { class: 'icon-btn', html: icon('ellipsis', { size: 20 }) });
+        const kebabBtn = el('button', { class: 'icon-btn', style: 'color:var(--text-secondary)', 'aria-label': 'Übung verschieben oder entfernen', html: icon('ellipsis', { size: 22 }) });
         kebabBtn.addEventListener('click', () => {
           const items = [];
           if (index > 0) items.push({ label: 'Nach oben verschieben', icon: 'arrowUp', onClick: () => { [exercises[index - 1], exercises[index]] = [exercises[index], exercises[index - 1]]; renderAll(); } });
@@ -277,9 +298,10 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
             weightInput.addEventListener('input', () => onSetInput('weight'));
             repsInput.addEventListener('input', () => onSetInput('reps'));
 
-            const setMenuBtn = el('button', { class: 'icon-btn', html: icon('ellipsis', { size: 16 }) });
-            setMenuBtn.addEventListener('click', () => {
-              showActionMenu(setMenuBtn, [{ label: 'Satz entfernen', icon: 'trash', destructive: true, onClick: () => { ex.sets.splice(si, 1); renderSets(); } }]);
+            const setMenuBtn = el('button', {
+              class: 'icon-btn', style: 'color:var(--text-secondary)', 'aria-label': `Satz ${si + 1} entfernen`,
+              html: icon('x', { size: 18 }),
+              onclick: () => { ex.sets.splice(si, 1); renderSets(); },
             });
 
             setsTable.append(el('div', { class: 'set-row' }, [
@@ -290,18 +312,18 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
         }
         renderSets();
 
-        const addSetBtn = el('button', { class: 'btn-plain', onclick: () => { ex.sets.push(newSet()); renderSets(); } }, [
-          el('span', { html: icon('plus', { size: 14 }) }), ' Satz hinzufügen',
+        const addSetBtn = el('button', { class: 'btn-plain', style: 'display:flex;align-items:center;gap:6px', onclick: () => { ex.sets.push(newSet()); renderSets(); } }, [
+          el('span', { html: icon('plus', { size: 18 }), style: 'display:flex' }), 'Satz hinzufügen',
         ]);
 
-        const last = lastPerformance(ex.name);
+        const last = lastExercise(ex.name);
 
         return el('div', { class: 'exercise-card' }, [
           el('div', { class: 'exercise-card-header' }, [nameField, kebabBtn]),
-          notesField,
+          last ? el('div', { class: 'last-performance' }, `Zuletzt (${formatDateShort(last.date)}): ${exerciseSummary(last)}`) : null,
           setsTable,
           addSetBtn,
-          last ? el('div', { class: 'last-performance' }, `Zuletzt: ${last}`) : null,
+          notesField,
         ]);
       }
 
@@ -316,9 +338,9 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
         renderAll();
       } }, [el('span', { html: icon('plus', { size: 16 }) }), 'Übung hinzufügen']);
 
-      const rpeLabel = el('span', {}, `Anstrengung (RPE ${rpe}/10)`);
+      const rpeLabel = el('span', {}, rpeText(rpe));
       const rpeInput = el('input', { type: 'range', min: 1, max: 10, step: 1, value: rpe });
-      rpeInput.addEventListener('input', () => { rpe = Number(rpeInput.value); rpeLabel.textContent = `Anstrengung (RPE ${rpe}/10)`; });
+      rpeInput.addEventListener('input', () => { rpe = Number(rpeInput.value); rpeLabel.textContent = rpeText(rpe); });
 
       const notesInput = el('textarea', { placeholder: 'Wie ist es gelaufen?' }, sessionNotes);
 
@@ -327,6 +349,7 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
           el('div', { class: 'form-row' }, [nameInput]),
           el('div', { class: 'form-row' }, [el('label', { class: 'form-label' }, 'Startzeit'), startInput]),
           el('div', { class: 'form-row' }, [el('label', { class: 'form-label' }, 'Endzeit'), endInput]),
+          endTime ? null : el('div', { class: 'form-row text-secondary', style: 'font-size:14px;min-height:0' }, 'Ohne Endzeit zählt die Uhrzeit beim Sichern. Sofort gesichert: 45 min bis jetzt.'),
           el('div', { class: 'form-row' }, [el('label', { class: 'form-label' }, 'Körpergewicht'), bodyWeightInput, el('span', { class: 'unit-suffix' }, 'kg')]),
         ]),
         el('div', { style: 'margin-top:16px' }, exercisesContainer),
@@ -338,8 +361,10 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
       );
 
       save = async (close) => {
-        const start = new Date(startInput.value);
-        const end = new Date(endInput.value);
+        let start = new Date(startInput.value);
+        const end = endInput.value ? new Date(endInput.value) : new Date();
+        // Ohne Endzeit direkt nach dem Öffnen gesichert = nachgetragen: dann 45 min bis jetzt statt 0 min
+        if (!endInput.value && end - start < 5 * 60 * 1000) start = new Date(end.getTime() - 45 * 60 * 1000);
         const durationSeconds = Math.max(0, Math.round((end - start) / 1000));
 
         const workout = existingWorkout || { id: uuid() };
@@ -380,15 +405,15 @@ function openStrengthMonthOverview() {
   let monthOffset = 0;
 
   openSheet({
-    title: '',
+    title: 'Monatsübersicht',
     leftLabel: 'Fertig',
     noRightButton: true,
     render(sheet) {
       sheet.body.innerHTML = '';
       const nav = el('div', { class: 'month-nav', style: 'justify-content:center;margin-bottom:16px' }, [
-        el('button', { html: icon('chevronLeft', { size: 20 }), onclick: () => { monthOffset -= 1; draw(); } }),
-        el('div', { id: 'month-label', style: 'font-weight:600;min-width:160px;text-align:center' }),
-        el('button', { html: icon('chevronRight', { size: 20 }), onclick: () => { monthOffset += 1; draw(); } }),
+        el('button', { 'aria-label': 'Vorheriger Monat', html: icon('chevronLeft', { size: 22 }), onclick: () => { monthOffset -= 1; draw(); } }),
+        el('div', { id: 'month-label', class: 'figure', style: 'font-size:22px;font-weight:700;text-transform:uppercase;min-width:180px;text-align:center' }),
+        el('button', { 'aria-label': 'Nächster Monat', html: icon('chevronRight', { size: 22 }), onclick: () => { monthOffset += 1; draw(); } }),
       ]);
       const listWrap = el('div');
       sheet.body.append(nav, listWrap);
@@ -411,6 +436,7 @@ function openStrengthMonthOverview() {
           return;
         }
         const list = el('div', { class: 'list' });
+        listWrap.append(el('p', { class: 'text-secondary', style: 'margin:0 4px 10px' }, `${workouts.length} ${workouts.length === 1 ? 'Krafttraining' : 'Krafttrainings'}`));
         for (const w of workouts) {
           const exerciseNames = (w.strengthExercises || []).map(e => e.name).join(', ');
           list.append(el('div', {

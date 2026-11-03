@@ -22,8 +22,9 @@ export function applyStoredTheme() {
 export function openSettingsSheet() {
   openSheet({
     title: 'Einstellungen',
-    saveLabel: 'Fertig',
-    onSave: (close) => close(),
+    // Änderungen gelten sofort, darum nur ein Schließen-Button
+    leftLabel: 'Fertig',
+    noRightButton: true,
     render(sheet) {
       const currentMode = localStorage.getItem('appearanceMode') || 'system';
 
@@ -76,14 +77,16 @@ export function openSettingsSheet() {
         el('div', { class: 'form-group' }, radioList),
         el('div', { class: 'section-title', style: 'margin-top:24px' }, 'Garmin (über intervals.icu)'),
         el('div', { class: 'card', style: 'display:flex;flex-direction:column;gap:10px' }, [
-          el('p', { class: 'text-secondary', style: 'margin:0;font-size:13px' },
+          el('p', { class: 'text-secondary', style: 'margin:0;font-size:15px' },
             'Läufe, Radfahrten und Schwimmeinheiten (letzte 30 Tage) werden beim Öffnen automatisch übernommen. Der Schlüssel bleibt nur auf diesem Gerät.'),
+          el('p', { class: 'text-secondary', style: 'margin:0;font-size:15px' },
+            'Den Schlüssel findest du auf intervals.icu unter Settings → Developer Settings → API Key.'),
           el('div', { class: 'form-group' }, el('div', { class: 'form-row align-left' }, keyInput)),
           syncBtn,
         ]),
         el('div', { class: 'section-title', style: 'margin-top:24px' }, 'Daten'),
         el('div', { class: 'card', style: 'display:flex;flex-direction:column;gap:10px' }, [
-          el('p', { class: 'text-secondary', style: 'margin:0;font-size:13px' },
+          el('p', { class: 'text-secondary', style: 'margin:0;font-size:15px' },
             'Deine Trainingsdaten liegen nur lokal auf diesem Gerät im Browser-Speicher (kein Cloud-Sync). Erstelle ab und zu ein Backup als Sicherung.'),
           exportBtn, importBtn, importInput,
         ])
