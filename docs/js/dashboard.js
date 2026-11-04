@@ -1,4 +1,4 @@
-import { el, SPORT_TYPES, WEEKDAY_SHORT, startOfWeek, endOfWeek, startOfDay, formatDateShort, formatDistance, formatHours, isoWeekNumber } from './utils.js';
+import { el, SPORT_TYPES, sportCap, WEEKDAY_SHORT, startOfWeek, endOfWeek, startOfDay, formatDateShort, formatDistance, formatHours, isoWeekNumber } from './utils.js';
 import { icon } from './icons.js';
 import { db } from './db.js';
 import { fab, showActionMenu } from './ui.js';
@@ -8,10 +8,10 @@ import { raceBib, nextRace } from './competitions.js';
 
 const setCount = (w) => (w.strengthExercises || []).reduce((s, e) => s + e.sets.length, 0);
 
-// Kappengröße wächst mit dem Umfang (Kraft: Sätze, sonst Dauer), gedeckelt, damit lange Radeinheiten den Slot nicht sprengen
+// Kappengröße wächst mit dem Umfang (Kraft: Sätze, sonst Dauer); ab 24px bleibt der Buchstabe lesbar, gedeckelt, damit lange Radeinheiten den Slot nicht sprengen
 function capSize(w) {
-  if (w.sportType === 'strength' && setCount(w)) return Math.round(Math.min(44, 16 + setCount(w) * 1.3));
-  return Math.round(Math.min(44, Math.max(16, 12 + Math.sqrt(w.durationSeconds / 60) * 2.6)));
+  if (w.sportType === 'strength' && setCount(w)) return Math.round(Math.min(44, Math.max(24, 16 + setCount(w) * 1.3)));
+  return Math.round(Math.min(44, Math.max(24, 12 + Math.sqrt(w.durationSeconds / 60) * 2.6)));
 }
 
 function sumBy(list, fn) { return list.reduce((s, w) => s + (fn(w) || 0), 0); }
@@ -62,7 +62,7 @@ export async function renderDashboardPage(container) {
   // 1. Startnummer: das nächste Rennen
   content.append(raceBib(nextRace(competitions)));
 
-  // 2. Wechselzone: die Woche als Rack mit sieben Plätzen
+  // 2. Wochenübersicht: die Woche als Rack mit sieben Plätzen
   const totalThis = sumBy(thisWeek, w => w.durationSeconds);
   const totalLast = sumBy(lastWeek, w => w.durationSeconds);
   const today = startOfDay(now);
@@ -76,10 +76,7 @@ export async function renderDashboardPage(container) {
 
     const caps = el('div', { class: 'rack-caps' });
     if (sessions.length) {
-      for (const w of sessions) {
-        const size = capSize(w);
-        caps.append(el('span', { class: 'cap', style: `width:${size}px;height:${size}px;background:${SPORT_TYPES[w.sportType].tint}` }));
-      }
+      for (const w of sessions) caps.append(sportCap(w.sportType, { size: capSize(w) }));
     } else if (isFuture) {
       caps.append(el('span', { class: 'cap future' }));
     } else {
@@ -112,8 +109,11 @@ export async function renderDashboardPage(container) {
   content.append(
     el('section', {}, [
       el('h2', { class: 'section-title', style: 'margin:0' }, [
-        el('span', {}, 'Wechselzone'),
-        el('span', { class: 'aside' }, `${formatHours(totalThis)}${totalLast ? ` · Vorwoche ${formatHours(totalLast)}` : ''}`),
+        el('span', {}, 'Wochenübersicht'),
+        el('span', { class: 'week-total' }, [
+          el('span', { class: 'v' }, formatHours(totalThis)),
+          totalLast ? el('span', { class: 'aside' }, `Vorwoche ${formatHours(totalLast)}`) : null,
+        ]),
       ]),
       el('div', { class: 'rack' }, [slots]),
     ]),
@@ -142,7 +142,7 @@ export async function renderDashboardPage(container) {
 
     lines.append(
       el('div', { class: `sport-line${mine.length ? '' : ' idle'}` }, [
-        el('span', { class: `cap${mine.length ? '' : ' empty'}`, style: mine.length ? `background:${sport.tint}` : `border-color:${sport.tint}` }),
+        sportCap(key, { idle: !mine.length }),
         el('div', {}, [
           el('div', { class: 'sport-line-name' }, sport.displayName),
           el('div', { class: 'sport-line-meta' }, meta),
@@ -179,7 +179,7 @@ export async function renderDashboardPage(container) {
   } else {
     content.append(
       el('div', { class: 'empty-state', style: 'padding:24px 16px' }, [
-        el('h3', {}, 'Die Wechselzone ist noch leer'),
+        el('h3', {}, 'Die Wochenübersicht ist noch leer'),
         el('p', {}, 'Trag dein erstes Training ein oder verbinde Garmin in den Einstellungen, dann füllt sich die Woche von selbst.'),
       ]),
       el('div', { class: 'list' }, [planRow]),

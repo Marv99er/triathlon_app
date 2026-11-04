@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trilog-v8';
+const CACHE_NAME = 'trilog-v9';
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 const PRECACHE_URLS = [
   './',

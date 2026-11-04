@@ -30,7 +30,12 @@ function durationFieldRow(label, fields) {
   ]);
 }
 
-const isUpcoming = (c) => daysUntil(c.date) >= 0;
+// Ältere Einträge haben noch keinen Haken gespeichert, bei ihnen entscheidet das Datum
+const isPlanned = (c) => c.isPlanned ?? daysUntil(c.date) >= 0;
+const isUpcoming = (c) => isPlanned(c) && daysUntil(c.date) >= 0;
+// Bei geplanten Rennen ist die gespeicherte Zeit das Ziel, also kein Ergebnis
+const resultSeconds = (c) => isPlanned(c) ? 0 : c.totalDurationSeconds;
+const totalClock = (c) => resultSeconds(c) ? formatClock(resultSeconds(c)) : '–';
 
 export function nextRace(competitions) {
   return competitions.filter(isUpcoming).sort((a, b) => new Date(a.date) - new Date(b.date))[0] || null;
@@ -48,7 +53,7 @@ export function raceBib(race, { interactive = true } = {}) {
     return el('div', { class: 'bib empty' }, [
       el('div', { class: 'bib-head' }, [el('span', {}, 'Kein Rennen geplant')]),
       el('p', {}, 'Trag dein nächstes Rennen ein, dann zählt TriLog die Tage bis zum Start.'),
-      el('button', { class: 'btn btn-primary', onclick: () => openCompetitionForm({}) }, 'Rennen eintragen'),
+      el('button', { class: 'btn btn-primary', onclick: () => openCompetitionForm({ planned: true }) }, 'Rennen eintragen'),
     ]);
   }
   const days = daysUntil(race.date);
@@ -114,7 +119,7 @@ export async function renderCompetitionsPage(container) {
       el('section', {}, [
         el('h2', { class: 'section-title', style: 'margin:0' }, 'Ergebnisse'),
         resultCard(latest),
-        older.length ? el('div', { class: 'list', style: 'margin-top:12px' }, older.map(c => competitionRow(c, formatClock(c.totalDurationSeconds)))) : null,
+        older.length ? el('div', { class: 'list', style: 'margin-top:12px' }, older.map(c => competitionRow(c, totalClock(c)))) : null,
       ]),
     );
   }
@@ -128,19 +133,19 @@ function resultCard(c, { interactive = true } = {}) {
       el('span', { class: 'result-name' }, c.name),
       el('span', { class: 'result-date' }, formatDateAbbrev(c.date)),
     ]),
-    el('div', { class: 'result-time' }, formatClock(c.totalDurationSeconds)),
-    el('div', { class: 'result-meta' }, [raceKind(c), c.placement ? `Platz ${c.placement}` : null].filter(Boolean).join(' · ')),
+    el('div', { class: `result-time${resultSeconds(c) ? '' : ' missing'}` }, totalClock(c)),
+    el('div', { class: 'result-meta' }, [raceKind(c), c.placement ? `Platz ${c.placement}` : null, resultSeconds(c) ? null : 'Ergebnis offen'].filter(Boolean).join(' · ')),
   ]);
 
   // Feste Abfolge Swim · T1 · Bike · T2 · Run: fehlende Splits bleiben als Lücke sichtbar
   if (c.isTriathlon) {
     const legs = [
-      ['Swim', c.swimDurationSeconds, 'swim'], ['T1', c.t1DurationSeconds], ['Bike', c.bikeDurationSeconds, 'bike'],
-      ['T2', c.t2DurationSeconds], ['Run', c.runDurationSeconds, 'run'],
+      ['Swim', c.swimDurationSeconds], ['T1', c.t1DurationSeconds], ['Bike', c.bikeDurationSeconds],
+      ['T2', c.t2DurationSeconds], ['Run', c.runDurationSeconds],
     ];
-    card.append(el('div', { class: 'splits' }, legs.map(([label, sec, sport]) =>
+    card.append(el('div', { class: 'splits' }, legs.map(([label, sec]) =>
       el('div', { class: 'split' }, [
-        el('div', { class: 'k' }, [sport ? el('span', { class: 'cap', style: `background:${SPORT_TYPES[sport].tint}` }) : null, label]),
+        el('div', { class: 'k' }, label),
         el('div', { class: `t${sec ? '' : ' missing'}` }, sec ? formatClock(sec) : '–'),
       ])
     )));
@@ -177,8 +182,10 @@ function openCompetitionDetail(c) {
   });
 }
 
-export function openCompetitionForm({ existingCompetition }) {
+export function openCompetitionForm({ existingCompetition, planned: plannedDefault = false }) {
   const isEditing = !!existingCompetition;
+  // Ein geplantes Rennen, dessen Datum vorbei ist, öffnet direkt zum Eintragen des Ergebnisses
+  let planned = isEditing ? isUpcoming(existingCompetition) : plannedDefault;
   let isTriathlon = existingCompetition?.isTriathlon || false;
   let sportType = existingCompetition?.sportType || 'run';
   let save = null;
@@ -190,8 +197,12 @@ export function openCompetitionForm({ existingCompetition }) {
       const nameInput = el('input', { type: 'text', placeholder: 'z. B. Stadttriathlon Musterhausen', value: existingCompetition?.name || '' });
       nameInput.style.textAlign = 'left';
       const dateInput = el('input', { type: 'date', value: toDateInputValue(existingCompetition?.date || new Date()) });
+      const plannedCheck = el('input', { type: 'checkbox', class: 'check' });
+      plannedCheck.checked = planned;
+      const dateHint = el('p', { class: 'form-hint' });
       const triToggle = el('input', { type: 'checkbox', class: 'toggle' });
       triToggle.checked = isTriathlon;
+      const triLabel = el('label', { class: 'form-label' });
 
       const disciplineSection = el('div');
       const sportSelect = el('select');
@@ -212,7 +223,10 @@ export function openCompetitionForm({ existingCompetition }) {
         );
       }
 
-      const totalFields = timeFields('total', existingCompetition?.totalDurationSeconds);
+      // Zielzeit und Ergebnis sind getrennte Felder, damit ein Ziel nie versehentlich zum Ergebnis wird
+      const wasPlanned = isEditing && isPlanned(existingCompetition);
+      const goalFields = timeFields('goal', wasPlanned ? existingCompetition.totalDurationSeconds : 0);
+      const totalFields = timeFields('total', wasPlanned ? 0 : existingCompetition?.totalDurationSeconds);
       const swimFields = timeFields('swim', existingCompetition?.swimDurationSeconds);
       const t1Fields = timeFields('t1', existingCompetition?.t1DurationSeconds);
       const bikeFields = timeFields('bike', existingCompetition?.bikeDurationSeconds);
@@ -222,7 +236,7 @@ export function openCompetitionForm({ existingCompetition }) {
       const splitSection = el('div');
       function renderSplits() {
         splitSection.innerHTML = '';
-        if (!isTriathlon) return;
+        if (!isTriathlon || planned) return;
         splitSection.append(
           el('div', { class: 'section-title', style: 'margin-top:20px' }, 'Einzelzeiten (optional)'),
           el('div', { class: 'form-group' }, [
@@ -238,36 +252,46 @@ export function openCompetitionForm({ existingCompetition }) {
       sportSelect.addEventListener('change', () => { sportType = sportSelect.value; renderDiscipline(); });
       triToggle.addEventListener('change', () => { isTriathlon = triToggle.checked; renderDiscipline(); renderSplits(); });
 
-      // Liegt das Rennen in der Zukunft, ist die eingetragene Zeit das Ziel
       const timeTitle = el('div', { class: 'section-title', style: 'margin-top:24px' });
-      const updateTimeTitle = () => {
-        timeTitle.textContent = daysUntil(dateInput.value + 'T12:00:00') > 0 ? 'Zielzeit (h:mm:ss)' : 'Gesamtzeit (h:mm:ss)';
-      };
-      dateInput.addEventListener('change', updateTimeTitle);
-      updateTimeTitle();
-
+      const timeGroup = el('div', { class: 'form-group' });
+      const timeHint = el('p', { class: 'form-hint' });
       const placementInput = el('input', { type: 'number', placeholder: 'optional', value: existingCompetition?.placement ?? '' });
+      const placementRow = el('div', { class: 'form-row' }, [el('label', { class: 'form-label' }, 'Platzierung'), placementInput]);
       const notesInput = el('textarea', { placeholder: 'Notizen' }, existingCompetition?.notes || '');
+      const notesRow = el('div', { class: 'form-row' }, [notesInput]);
+      const otherGroup = el('div', { class: 'form-group' });
+
+      // Der Haken entscheidet: geplant = Zielzeit, sonst Ergebnis mit Zeit, Einzelzeiten und Platzierung
+      function renderMode() {
+        triLabel.textContent = planned ? 'Triathlon' : 'Triathlon mit Einzelzeiten';
+        timeTitle.textContent = planned ? 'Zielzeit (optional)' : 'Gesamtzeit';
+        timeGroup.innerHTML = '';
+        timeGroup.append(durationFieldRow(planned ? 'Ziel' : 'Zeit', planned ? goalFields : totalFields));
+        otherGroup.innerHTML = '';
+        if (!planned) otherGroup.append(placementRow);
+        otherGroup.append(notesRow);
+        renderSplits();
+      }
 
       sheet.body.append(
         el('div', { class: 'section-title' }, 'Wettkampf'),
         el('div', { class: 'form-group' }, [
           el('div', { class: 'form-row' }, [nameInput]),
           el('div', { class: 'form-row' }, [el('label', { class: 'form-label' }, 'Datum'), dateInput]),
-          el('div', { class: 'form-row' }, [el('label', { class: 'form-label' }, 'Triathlon mit Einzelzeiten'), triToggle]),
+          el('label', { class: 'form-row check-row' }, [el('span', { class: 'form-label' }, 'Geplantes Rennen'), plannedCheck]),
+          el('div', { class: 'form-row' }, [triLabel, triToggle]),
         ]),
+        dateHint,
         disciplineSection,
         timeTitle,
-        el('div', { class: 'form-group' }, [durationFieldRow('Zeit', totalFields)]),
+        timeGroup,
+        timeHint,
         splitSection,
         el('div', { class: 'section-title', style: 'margin-top:20px' }, 'Sonstiges'),
-        el('div', { class: 'form-group' }, [
-          el('div', { class: 'form-row' }, [el('label', { class: 'form-label' }, 'Platzierung'), placementInput]),
-          el('div', { class: 'form-row' }, [notesInput]),
-        ]),
+        otherGroup,
       );
       renderDiscipline();
-      renderSplits();
+      renderMode();
 
       if (isEditing) {
         sheet.body.append(
@@ -284,22 +308,40 @@ export function openCompetitionForm({ existingCompetition }) {
         );
       }
 
-      function updateSaveDisabled() {
-        sheet.setSaveDisabled(!nameInput.value.trim() || readTimeFields(totalFields) === 0);
+      function dateConflict() {
+        if (!dateInput.value) return '';
+        const days = daysUntil(dateInput.value + 'T12:00:00');
+        if (planned && days < 0) return 'Dieses Datum liegt in der Vergangenheit. Nimm den Haken raus, um das Ergebnis einzutragen, oder wähle ein Datum ab heute.';
+        if (!planned && days > 0) return 'Dieses Datum liegt in der Zukunft. Setz den Haken bei „Geplantes Rennen“, wenn das Rennen noch kommt.';
+        return '';
       }
+      const needsResultTime = () => !planned && readTimeFields(totalFields) === 0;
+      const canSave = () => !!nameInput.value.trim() && !!dateInput.value && !dateConflict() && !needsResultTime();
+      // Ist Sichern gesperrt, sagt der Hinweis warum
+      function updateSaveDisabled() {
+        sheet.setSaveDisabled(!canSave());
+        dateHint.textContent = dateConflict();
+        dateHint.hidden = !dateHint.textContent;
+        timeHint.textContent = nameInput.value.trim() && needsResultTime() ? 'Trag die Gesamtzeit ein, um das Ergebnis zu sichern.' : '';
+        timeHint.hidden = !timeHint.textContent;
+      }
+      plannedCheck.addEventListener('change', () => { planned = plannedCheck.checked; renderMode(); updateSaveDisabled(); });
       nameInput.addEventListener('input', updateSaveDisabled);
-      [...Object.values(totalFields)].forEach(f => f.addEventListener('input', updateSaveDisabled));
+      dateInput.addEventListener('input', updateSaveDisabled);
+      dateInput.addEventListener('change', updateSaveDisabled);
+      Object.values(totalFields).forEach(f => f.addEventListener('input', updateSaveDisabled));
       updateSaveDisabled();
 
       save = async (close) => {
-        if (!nameInput.value.trim() || readTimeFields(totalFields) === 0) return;
+        if (!canSave()) return;
         const competition = existingCompetition || { id: uuid() };
         competition.name = nameInput.value.trim();
         competition.date = new Date(dateInput.value + 'T12:00:00').toISOString();
         competition.isTriathlon = isTriathlon;
         competition.sportType = isTriathlon ? null : sportType;
         competition.distanceKm = (!isTriathlon && SPORT_TYPES[sportType].tracksDistance && distanceInput.value) ? parseFloat(distanceInput.value) : null;
-        competition.totalDurationSeconds = readTimeFields(totalFields);
+        competition.isPlanned = planned;
+        competition.totalDurationSeconds = readTimeFields(planned ? goalFields : totalFields);
         competition.swimDurationSeconds = (isTriathlon && readTimeFields(swimFields) > 0) ? readTimeFields(swimFields) : null;
         competition.t1DurationSeconds = (isTriathlon && readTimeFields(t1Fields) > 0) ? readTimeFields(t1Fields) : null;
         competition.bikeDurationSeconds = (isTriathlon && readTimeFields(bikeFields) > 0) ? readTimeFields(bikeFields) : null;

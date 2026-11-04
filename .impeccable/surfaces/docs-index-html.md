@@ -16,11 +16,11 @@ Unresolved: Plan tab demoted into Rennen/Woche or settings; Kraft stays a tab.
 
 THESIS: The week is a transition zone: every day is a numbered rack slot, every session a swim cap in its sport's colour, sized by duration. Refuses the iOS grey-tile dashboard with system blue.
 
-OWN-WORLD: Near-black rubber-mat ground (#111315) with raised charcoal plates; latex cap colours as data only: swim electric blue, bike safety orange, run acid lime, strength magenta-violet; one race pink (#FF2E88) reserved for the next race, today and the primary action. Heavy condensed uppercase numerals for figures, plain sans for text. Square-ish 6px plates, hairline rack rails.
+OWN-WORLD: Near-black rubber-mat ground (#111315) with raised charcoal plates; latex cap colours as data only: swim electric blue, bike safety orange, run acid lime, strength magenta-violet; one race blue (#5B7CFF) reserved for the next race, today and the primary action. Heavy condensed uppercase numerals for figures, plain sans for text. Square-ish 6px plates, hairline rack rails.
 
 STORY: Open the app, read the race bib (days to race, goal), see this week's rack filled vs dashed, compare each sport to last week, tap + to log.
 
-FIRST VIEWPORT: Top: "WOCHE 45" + dates, settings icon. White race-bib plate: race name, date, giant "46 TAGE", pink band. Rack: rail with 7 numbered slots Mo–So, caps sized by duration, dashed outlines for past empty days, today highlighted pink. Sport rows: colour cap, name, sessions, value, delta vs last week. Pink + FAB bottom right above the tab bar (Woche, Log, Kraft, Rennen).
+FIRST VIEWPORT: Top: "WOCHE 45" + dates, settings icon. White race-bib plate: race name, date, giant "46 TAGE", blue band. Rack: rail with 7 numbered slots Mo–So, caps sized by duration, dashed outlines for past empty days, today highlighted blue. Sport rows: colour cap, name, sessions, value, delta vs last week. Blue + FAB bottom right above the tab bar (Woche, Log, Kraft, Rennen).
 
 FORM: Swim caps and transition zone, position 6 of 7 on the grounded list; seed:6a5426ee922445e2. Raises: one accent reserved for the active week (orienteering course purple); state by line form (solid done / dashed empty); one graphic owns each screen.
 

@@ -175,12 +175,12 @@
           "oklch(95% 0.003 248)"
         ]
       },
-      "race-pink": {
+      "race-blue": {
         "role": "primary",
-        "displayName": "Race Pink",
-        "canonical": "#FF2E88",
+        "displayName": "Race Blue",
+        "canonical": "#5B7CFF",
         "oklch": "oklch(66.2% 0.244 1.7)",
-        "light": "#D4106A",
+        "light": "#2B4BD8",
         "purpose": "Race bib band, today, primary action, interactive tint, focus.",
         "cssVar": "--accent",
         "tonalRamp": [
@@ -194,13 +194,13 @@
           "oklch(95% 0.051 1.7)"
         ]
       },
-      "on-race-pink": {
+      "on-race-blue": {
         "role": "primary",
-        "displayName": "On Race Pink",
+        "displayName": "On Race Blue",
         "canonical": "#111315",
         "oklch": "oklch(18.5% 0.005 248.1)",
         "light": "#FFFFFF",
-        "purpose": "Text and icons on race pink.",
+        "purpose": "Text and icons on race blue.",
         "cssVar": "--on-accent",
         "tonalRamp": [
           "oklch(15% 0.003 248.1)",
@@ -384,11 +384,11 @@
           "oklch(95% 0.042 27.8)"
         ]
       },
-      "race-pink-wash": {
+      "race-blue-wash": {
         "role": "primary",
-        "displayName": "Race Pink Wash",
-        "canonical": "rgba(255, 46, 136, 0.14)",
-        "light": "rgba(212, 16, 106, 0.1)",
+        "displayName": "Race Blue Wash",
+        "canonical": "rgba(91, 124, 255, 0.14)",
+        "light": "rgba(43, 75, 216, 0.1)",
         "cssVar": "--accent-wash",
         "purpose": "Focused form row, today row in Kraft."
       }
@@ -403,7 +403,7 @@
       {
         "name": "light",
         "selector": "html[data-theme=\"light\"], or prefers-color-scheme: light when no data-theme is set",
-        "note": "Same world on a light mat; deeper pink and darker cap colours for contrast. Values in colorMeta.*.light."
+        "note": "Same world on a light mat; deeper blue and darker cap colours for contrast. Values in colorMeta.*.light."
       }
     ],
     "typographyMeta": {
@@ -509,9 +509,9 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Main in-form action: race pink with mat-coloured text.",
+      "description": "Main in-form action: race blue with mat-coloured text.",
       "html": "<button class=\"ds-btn ds-btn-primary\">Speichern</button>",
-      "css": ".ds-btn { border: none; border-radius: 6px; padding: 13px 18px; min-height: 48px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; } .ds-btn:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; } .ds-btn-primary { background: var(--accent, #FF2E88); color: var(--on-accent, #111315); } .ds-btn-primary:active { filter: brightness(0.92); }"
+      "css": ".ds-btn { border: none; border-radius: 6px; padding: 13px 18px; min-height: 48px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; } .ds-btn:focus-visible { outline: 2px solid var(--accent, #5B7CFF); outline-offset: 2px; } .ds-btn-primary { background: var(--accent, #5B7CFF); color: var(--on-accent, #111315); } .ds-btn-primary:active { filter: brightness(0.92); }"
     },
     {
       "name": "Secondary Button",
@@ -519,23 +519,23 @@
       "refersTo": "button-secondary",
       "description": "Neutral action on a control plate; destructive variant uses red text on the same plate.",
       "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-btn2\">Abbrechen</button><button class=\"ds-btn2 ds-btn2-destructive\">Löschen</button></div>",
-      "css": ".ds-btn2 { border: none; border-radius: 6px; padding: 13px 18px; min-height: 48px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 16px; font-weight: 600; cursor: pointer; background: var(--control-bg, #2A2E33); color: var(--text, #F2F1EC); } .ds-btn2-destructive { color: var(--destructive, #FF5A4E); } .ds-btn2:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; } .ds-btn2:active { filter: brightness(1.15); }"
+      "css": ".ds-btn2 { border: none; border-radius: 6px; padding: 13px 18px; min-height: 48px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 16px; font-weight: 600; cursor: pointer; background: var(--control-bg, #2A2E33); color: var(--text, #F2F1EC); } .ds-btn2-destructive { color: var(--destructive, #FF5A4E); } .ds-btn2:focus-visible { outline: 2px solid var(--accent, #5B7CFF); outline-offset: 2px; } .ds-btn2:active { filter: brightness(1.15); }"
     },
     {
       "name": "Tab Bar with Primary Action",
       "kind": "nav",
       "refersTo": "tab-item",
-      "description": "Four tabs with the single pink + action in the thumb zone between Log and Kraft.",
+      "description": "Four tabs with the single blue + action in the thumb zone between Log and Kraft.",
       "html": "<nav class=\"ds-tabbar\"><button class=\"ds-tab ds-tab-active\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 11.5 12 4l9 7.5M5.5 10v9.5a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V10\"/></svg><span>Woche</span></button><button class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01\"/></svg><span>Log</span></button><button class=\"ds-tab-primary\" aria-label=\"Hinzufügen\"><svg width=\"30\" height=\"30\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg></button><button class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M3 10v4M21 10v4M8 12h8\"/><rect x=\"5\" y=\"6\" width=\"3\" height=\"12\" rx=\"1.5\"/><rect x=\"16\" y=\"6\" width=\"3\" height=\"12\" rx=\"1.5\"/></svg><span>Kraft</span></button><button class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 4h8v5a4 4 0 0 1-8 0V4ZM8 6H5a2 2 0 0 0 0 4h1M16 6h3a2 2 0 0 1 0 4h-1M12 13v3m-3 4h6l-1-2.5h-4L9 20Z\"/></svg><span>Rennen</span></button></nav>",
-      "css": ".ds-tabbar { display: flex; border-top: 1px solid var(--separator, #2E3338); background: var(--bg, #111315); } .ds-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 0 6px; min-height: 52px; background: none; border: none; color: var(--text-tertiary, #80878E); font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; } .ds-tab:hover { color: var(--text-secondary, #A3A9AF); } .ds-tab-active, .ds-tab-active:hover { color: var(--accent, #FF2E88); } .ds-tab-primary { flex: 0 0 64px; align-self: center; height: 46px; margin: 4px 2px; border-radius: 12px; border: none; background: var(--accent, #FF2E88); color: var(--on-accent, #111315); display: flex; align-items: center; justify-content: center; cursor: pointer; } .ds-tab-primary:active { transform: scale(0.96); } .ds-tab:focus-visible, .ds-tab-primary:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; }"
+      "css": ".ds-tabbar { display: flex; border-top: 1px solid var(--separator, #2E3338); background: var(--bg, #111315); } .ds-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 0 6px; min-height: 52px; background: none; border: none; color: var(--text-tertiary, #80878E); font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; } .ds-tab:hover { color: var(--text-secondary, #A3A9AF); } .ds-tab-active, .ds-tab-active:hover { color: var(--accent, #5B7CFF); } .ds-tab-primary { flex: 0 0 64px; align-self: center; height: 46px; margin: 4px 2px; border-radius: 12px; border: none; background: var(--accent, #5B7CFF); color: var(--on-accent, #111315); display: flex; align-items: center; justify-content: center; cursor: pointer; } .ds-tab-primary:active { transform: scale(0.96); } .ds-tab:focus-visible, .ds-tab-primary:focus-visible { outline: 2px solid var(--accent, #5B7CFF); outline-offset: 2px; }"
     },
     {
       "name": "Form Row Group",
       "kind": "input",
       "refersTo": "form-row",
-      "description": "Settings-style rows on a plate: label left, borderless right-aligned value; focus washes the row pink.",
+      "description": "Settings-style rows on a plate: label left, borderless right-aligned value; focus washes the row blue.",
       "html": "<div class=\"ds-group\"><label class=\"ds-row\"><span class=\"ds-label\">Distanz</span><input type=\"text\" placeholder=\"0\"><span class=\"ds-unit\">km</span></label><label class=\"ds-row\"><span class=\"ds-label\">Notiz</span><input type=\"text\" placeholder=\"optional\"></label></div>",
-      "css": ".ds-group { background: var(--bg-card, #1B1E21); border-radius: 6px; overflow: hidden; } .ds-row { display: flex; align-items: center; gap: 10px; padding: 12px 16px; min-height: 52px; border-bottom: 1px solid var(--separator, #2E3338); color: var(--text, #F2F1EC); font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); } .ds-row:last-child { border-bottom: none; } .ds-label { flex: 1; font-size: 16px; } .ds-row input { border: none; background: none; color: var(--text, #F2F1EC); font: inherit; font-size: 16px; flex: 1; min-width: 0; text-align: right; outline: none; caret-color: var(--accent, #FF2E88); } .ds-row input::placeholder { color: var(--text-tertiary, #80878E); } .ds-row:focus-within { background: var(--accent-wash, rgba(255,46,136,0.14)); } .ds-unit { color: var(--text-secondary, #A3A9AF); font-size: 15px; }"
+      "css": ".ds-group { background: var(--bg-card, #1B1E21); border-radius: 6px; overflow: hidden; } .ds-row { display: flex; align-items: center; gap: 10px; padding: 12px 16px; min-height: 52px; border-bottom: 1px solid var(--separator, #2E3338); color: var(--text, #F2F1EC); font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); } .ds-row:last-child { border-bottom: none; } .ds-label { flex: 1; font-size: 16px; } .ds-row input { border: none; background: none; color: var(--text, #F2F1EC); font: inherit; font-size: 16px; flex: 1; min-width: 0; text-align: right; outline: none; caret-color: var(--accent, #5B7CFF); } .ds-row input::placeholder { color: var(--text-tertiary, #80878E); } .ds-row:focus-within { background: var(--accent-wash, rgba(91, 124, 255,0.14)); } .ds-unit { color: var(--text-secondary, #A3A9AF); font-size: 15px; }"
     },
     {
       "name": "List Row",
@@ -543,23 +543,23 @@
       "refersTo": "list-row",
       "description": "Workout row on a plate with sport badge, title, meta, trailing value and chevron.",
       "html": "<div class=\"ds-list\"><div class=\"ds-lrow\" tabindex=\"0\"><span class=\"ds-badge\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"5.5\" cy=\"16.5\" r=\"3.5\" fill=\"currentColor\" fill-opacity=\".25\"/><circle cx=\"18.5\" cy=\"16.5\" r=\"3.5\" fill=\"currentColor\" fill-opacity=\".25\"/><path d=\"M5.5 16.5H12L9 9.5h7l2.5 7M12 16.5l4-7M9 9.5 5.5 16.5\"/></svg></span><div class=\"ds-lmain\"><div class=\"ds-ltitle\">Rad</div><div class=\"ds-lsub\">Di, 3. Nov. · 1:30 h</div></div><div class=\"ds-ltrail\">42,0 km</div><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#80878E\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"m9 18 6-6-6-6\"/></svg></div></div>",
-      "css": ".ds-list { background: var(--bg-card, #1B1E21); border-radius: 6px; overflow: hidden; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); color: var(--text, #F2F1EC); } .ds-lrow { display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 56px; border-bottom: 1px solid var(--separator, #2E3338); cursor: pointer; } .ds-lrow:last-child { border-bottom: none; } .ds-lrow:hover, .ds-lrow:active { background: var(--control-bg, #2A2E33); } .ds-lrow:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: -2px; } .ds-badge { width: 40px; height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--bike, #FF7A1A); background: color-mix(in srgb, var(--bike, #FF7A1A) 18%, transparent); } .ds-lmain { flex: 1; min-width: 0; } .ds-ltitle { font-size: 16px; font-weight: 600; } .ds-lsub { font-size: 14px; color: var(--text-secondary, #A3A9AF); margin-top: 2px; } .ds-ltrail { font-size: 14px; color: var(--text-secondary, #A3A9AF); }"
+      "css": ".ds-list { background: var(--bg-card, #1B1E21); border-radius: 6px; overflow: hidden; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); color: var(--text, #F2F1EC); } .ds-lrow { display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 56px; border-bottom: 1px solid var(--separator, #2E3338); cursor: pointer; } .ds-lrow:last-child { border-bottom: none; } .ds-lrow:hover, .ds-lrow:active { background: var(--control-bg, #2A2E33); } .ds-lrow:focus-visible { outline: 2px solid var(--accent, #5B7CFF); outline-offset: -2px; } .ds-badge { width: 40px; height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--bike, #FF7A1A); background: color-mix(in srgb, var(--bike, #FF7A1A) 18%, transparent); } .ds-lmain { flex: 1; min-width: 0; } .ds-ltitle { font-size: 16px; font-weight: 600; } .ds-lsub { font-size: 14px; color: var(--text-secondary, #A3A9AF); margin-top: 2px; } .ds-ltrail { font-size: 14px; color: var(--text-secondary, #A3A9AF); }"
     },
     {
       "name": "Race Bib",
       "kind": "custom",
       "refersTo": "race-bib",
-      "description": "Signature: white paper start number with safety-pin holes, giant days-to-race figure and pink band.",
+      "description": "Signature: white paper start number with safety-pin holes, giant days-to-race figure and blue band.",
       "html": "<div class=\"ds-bib\" tabindex=\"0\"><div class=\"ds-bib-head\"><span>Ironman 70.3 Kraichgau</span><span>19. Dez.</span></div><div class=\"ds-bib-num\"><span class=\"n\">46</span><span class=\"u\">Tage</span></div><div class=\"ds-bib-band\"><span>Ziel 5:30:00</span><span>6 Wo 4 T</span></div></div>",
-      "css": ".ds-bib { position: relative; background: var(--bib, #F4F5F6); color: var(--bib-ink, #15171A); border-radius: 4px; padding: 16px 22px 0; overflow: hidden; cursor: pointer; } .ds-bib::before, .ds-bib::after { content: \"\"; position: absolute; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--bg, #111315); } .ds-bib::before { left: 8px; } .ds-bib::after { right: 8px; } .ds-bib:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; } .ds-bib-head { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; } .ds-bib-num { display: flex; align-items: baseline; gap: 10px; margin: 2px 0 10px; font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); } .ds-bib-num .n { font-size: 96px; font-weight: 800; line-height: 0.86; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; } .ds-bib-num .u { font-size: 24px; font-weight: 800; text-transform: uppercase; } .ds-bib-band { margin: 0 -22px; padding: 9px 22px; background: var(--accent, #FF2E88); color: var(--on-accent, #111315); display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 14px; font-weight: 600; }"
+      "css": ".ds-bib { position: relative; background: var(--bib, #F4F5F6); color: var(--bib-ink, #15171A); border-radius: 4px; padding: 16px 22px 0; overflow: hidden; cursor: pointer; } .ds-bib::before, .ds-bib::after { content: \"\"; position: absolute; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--bg, #111315); } .ds-bib::before { left: 8px; } .ds-bib::after { right: 8px; } .ds-bib:focus-visible { outline: 2px solid var(--accent, #5B7CFF); outline-offset: 2px; } .ds-bib-head { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 17px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; } .ds-bib-num { display: flex; align-items: baseline; gap: 10px; margin: 2px 0 10px; font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); } .ds-bib-num .n { font-size: 96px; font-weight: 800; line-height: 0.86; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; } .ds-bib-num .u { font-size: 24px; font-weight: 800; text-transform: uppercase; } .ds-bib-band { margin: 0 -22px; padding: 9px 22px; background: var(--accent, #5B7CFF); color: var(--on-accent, #111315); display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-text, 'Barlow', -apple-system, sans-serif); font-size: 14px; font-weight: 600; }"
     },
     {
       "name": "Wechselzone Rack",
       "kind": "custom",
       "refersTo": "rack-number",
-      "description": "Signature: seven numbered rack slots on a rail; caps sized by duration, dashed for missed days, hollow rings for days ahead, today in pink.",
+      "description": "Signature: seven numbered rack slots on a rail; caps sized by duration, dashed for missed days, hollow rings for days ahead, today in blue.",
       "html": "<div class=\"ds-rack\"><div class=\"ds-slots\"><button class=\"ds-slot\"><span class=\"ds-no\">1</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap\" style=\"width:34px;height:34px;background:var(--swim,#1FA2FF)\"></span></span><span class=\"ds-day\">Mo</span></button><button class=\"ds-slot ds-today\"><span class=\"ds-no\">2</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap\" style=\"width:20px;height:20px;background:var(--strength,#D45CFF)\"></span><span class=\"ds-cap\" style=\"width:24px;height:24px;background:var(--run,#B4F000)\"></span></span><span class=\"ds-day\">Di</span></button><button class=\"ds-slot\"><span class=\"ds-no\">3</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">Mi</span></button><button class=\"ds-slot\"><span class=\"ds-no\">4</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">Do</span></button><button class=\"ds-slot\"><span class=\"ds-no\">5</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">Fr</span></button><button class=\"ds-slot\"><span class=\"ds-no\">6</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">Sa</span></button><button class=\"ds-slot\"><span class=\"ds-no\">7</span><span class=\"ds-hook\"></span><span class=\"ds-caps\"><span class=\"ds-cap ds-future\"></span></span><span class=\"ds-day\">So</span></button></div></div>",
-      "css": ".ds-rack { background: var(--bg-card, #1B1E21); border-radius: 6px; padding: 14px 8px 10px; } .ds-slots { display: grid; grid-template-columns: repeat(7, 1fr); background: linear-gradient(var(--rail, #3A4046), var(--rail, #3A4046)) no-repeat 6px 17px / calc(100% - 12px) 3px; } .ds-slot { display: flex; flex-direction: column; align-items: center; min-height: 100px; background: none; border: none; padding: 0; cursor: pointer; } .ds-slot:focus-visible { outline: 2px solid var(--accent, #FF2E88); outline-offset: 2px; border-radius: 4px; } .ds-no { font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 13px; font-weight: 700; line-height: 18px; min-width: 22px; padding: 0 4px; border-radius: 3px; background: var(--control-bg, #2A2E33); color: var(--text-secondary, #A3A9AF); font-variant-numeric: tabular-nums; position: relative; z-index: 1; margin-bottom: 1px; } .ds-slot:hover .ds-no { color: var(--text, #F2F1EC); } .ds-today .ds-no, .ds-today:hover .ds-no { background: var(--accent, #FF2E88); color: var(--on-accent, #111315); } .ds-hook { width: 2px; height: 12px; background: var(--rail, #3A4046); } .ds-caps { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; } .ds-cap { border-radius: 50%; flex-shrink: 0; } .ds-future { width: 10px; height: 10px; border: 2px solid var(--rail, #3A4046); } .ds-day { font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 15px; font-weight: 600; letter-spacing: 0.06em; color: var(--text-secondary, #A3A9AF); text-transform: uppercase; margin-top: 6px; } .ds-today .ds-day { color: var(--text, #F2F1EC); }"
+      "css": ".ds-rack { background: var(--bg-card, #1B1E21); border-radius: 6px; padding: 14px 8px 10px; } .ds-slots { display: grid; grid-template-columns: repeat(7, 1fr); background: linear-gradient(var(--rail, #3A4046), var(--rail, #3A4046)) no-repeat 6px 17px / calc(100% - 12px) 3px; } .ds-slot { display: flex; flex-direction: column; align-items: center; min-height: 100px; background: none; border: none; padding: 0; cursor: pointer; } .ds-slot:focus-visible { outline: 2px solid var(--accent, #5B7CFF); outline-offset: 2px; border-radius: 4px; } .ds-no { font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 13px; font-weight: 700; line-height: 18px; min-width: 22px; padding: 0 4px; border-radius: 3px; background: var(--control-bg, #2A2E33); color: var(--text-secondary, #A3A9AF); font-variant-numeric: tabular-nums; position: relative; z-index: 1; margin-bottom: 1px; } .ds-slot:hover .ds-no { color: var(--text, #F2F1EC); } .ds-today .ds-no, .ds-today:hover .ds-no { background: var(--accent, #5B7CFF); color: var(--on-accent, #111315); } .ds-hook { width: 2px; height: 12px; background: var(--rail, #3A4046); } .ds-caps { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; } .ds-cap { border-radius: 50%; flex-shrink: 0; } .ds-future { width: 10px; height: 10px; border: 2px solid var(--rail, #3A4046); } .ds-day { font-family: var(--font-figure, 'Barlow Condensed', 'Arial Narrow', sans-serif); font-size: 15px; font-weight: 600; letter-spacing: 0.06em; color: var(--text-secondary, #A3A9AF); text-transform: uppercase; margin-top: 6px; } .ds-today .ds-day { color: var(--text, #F2F1EC); }"
     },
     {
       "name": "Sport Line",
@@ -572,11 +572,11 @@
   ],
   "narrative": {
     "northStar": "Wechselzone",
-    "overview": "The app is a triathlon transition zone at dusk. The ground is a near-black rubber mat; content sits on slightly raised charcoal plates; the week is a bike rack with seven numbered slots; every session is a latex swim cap in its sport's colour, sized by volume. The next race is a white paper start number pinned to the top of the Woche screen. One race pink marks the race, today, and whatever you can press.\n\nIt is a dense, one-handed tool, not a dashboard of grey tiles. Figures are big, heavy and condensed so they read at arm's length in a gym or outdoors; prose stays in a plain sans. Surfaces are flat. Colour carries data (which sport) and intent (pink = act / now / race), never decoration. The rejected reference is the stock iOS grouped-tile dashboard with system blue.\n\nDark is the default scene. A daylight variant keeps the same world on a light-grey mat with white plates, a deeper pink, and darker cap colours for contrast.",
+    "overview": "The app is a triathlon transition zone at dusk. The ground is a near-black rubber mat; content sits on slightly raised charcoal plates; the week is a bike rack with seven numbered slots; every session is a latex swim cap in its sport's colour, sized by volume. The next race is a white paper start number pinned to the top of the Woche screen. One race blue marks the race, today, and whatever you can press.\n\nIt is a dense, one-handed tool, not a dashboard of grey tiles. Figures are big, heavy and condensed so they read at arm's length in a gym or outdoors; prose stays in a plain sans. Surfaces are flat. Colour carries data (which sport) and intent (blue = act / now / race), never decoration. The rejected reference is the stock iOS grouped-tile dashboard with system blue.\n\nDark is the default scene. A daylight variant keeps the same world on a light-grey mat with white plates, a deeper blue, and darker cap colours for contrast.",
     "keyCharacteristics": [
       "Rubber-mat ground, charcoal plates, hairline rails; no shadows at rest.",
       "Four sport cap colours used only as data marks.",
-      "One accent, race pink, for race, today and interaction.",
+      "One accent, race blue, for race, today and interaction.",
       "Barlow Condensed uppercase for figures and labels, Barlow for text, tabular numerals throughout.",
       "Solid = done, dashed = missed, small hollow ring = still to come.",
       "Portrait phone column, max 560px, thumb-zone primary action in the tab bar."
@@ -588,8 +588,8 @@
         "section": "colors"
       },
       {
-        "name": "The One Pink Rule",
-        "body": "Race pink is the only accent. It means the race, today, or \"press here\". No second accent colour exists, and system blue is never used.",
+        "name": "The One Blue Rule",
+        "body": "Race blue is the only accent. It means the race, today, or \"press here\". No second accent colour exists, and system blue is never used.",
         "section": "colors"
       },
       {
@@ -605,16 +605,16 @@
     ],
     "dos": [
       "Do mark state by line form: solid filled cap = done, dashed ring = nothing logged, small hollow rail ring = still ahead.",
-      "Do use race pink for the race, today, and the thing to press, with mat-coloured text on it in dark mode.",
+      "Do use race blue for the race, today, and the thing to press, with mat-coloured text on it in dark mode.",
       "Do set every figure in Barlow Condensed with tabular numerals, and keep body text and inputs at 16px.",
       "Do keep touch targets at 44px or more and route each screen's main action through the single tab-bar \"+\".",
-      "Do use the daylight variant's darker cap and pink values in light mode; never reuse the dark-mode cap colours on white.",
+      "Do use the daylight variant's darker cap and blue values in light mode; never reuse the dark-mode cap colours on white.",
       "Do separate rows with 1px hairlines inside a plate rather than spacing plates apart."
     ],
     "donts": [
       "Don't build the iOS grey-tile dashboard or use system blue.",
       "Don't colour buttons, headings or chrome with a sport colour.",
-      "Don't add a second accent colour or a pink gradient.",
+      "Don't add a second accent colour or a blue gradient.",
       "Don't put shadows on resting plates, cards, the rack or the bib.",
       "Don't add a floating action button over content; the primary action lives in the tab bar.",
       "Don't block browser zoom (the viewport allows scaling; keep it that way).",

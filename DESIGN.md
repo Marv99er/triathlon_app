@@ -11,16 +11,15 @@ colors:
   chalk: "#F2F1EC"
   chalk-secondary: "#A3A9AF"
   chalk-tertiary: "#80878E"
-  race-pink: "#FF2E88"
-  on-race-pink: "#111315"
-  race-pink-wash: "rgba(255, 46, 136, 0.14)"
+  race-blue: "#5B7CFF"
+  on-race-blue: "#111315"
+  race-blue-wash: "rgba(91, 124, 255, 0.14)"
   bib-paper: "#F4F5F6"
   bib-ink: "#15171A"
   bib-ink-secondary: "#4A4F55"
-  cap-swim: "#1FA2FF"
-  cap-bike: "#FF7A1A"
-  cap-run: "#B4F000"
-  cap-strength: "#D45CFF"
+  cap-black: "#000000"
+  cap-letter: "#FFFFFF"
+  cap-ring: "#565C62"
   positive: "#B4F000"
   destructive: "#FF5A4E"
 typography:
@@ -86,8 +85,8 @@ spacing:
   xxl: "48px"
 components:
   button-primary:
-    backgroundColor: "{colors.race-pink}"
-    textColor: "{colors.on-race-pink}"
+    backgroundColor: "{colors.race-blue}"
+    textColor: "{colors.on-race-blue}"
     typography: "{typography.body-strong}"
     rounded: "{rounded.plate}"
     padding: "13px 18px"
@@ -107,12 +106,12 @@ components:
     padding: "13px 18px"
     height: "48px"
   button-text:
-    textColor: "{colors.race-pink}"
+    textColor: "{colors.race-blue}"
     typography: "{typography.body-strong}"
     height: "44px"
   primary-action:
-    backgroundColor: "{colors.race-pink}"
-    textColor: "{colors.on-race-pink}"
+    backgroundColor: "{colors.race-blue}"
+    textColor: "{colors.on-race-blue}"
     rounded: "{rounded.sheet}"
     width: "64px"
     height: "46px"
@@ -122,7 +121,7 @@ components:
     typography: "{typography.tab-label}"
     height: "52px"
   tab-item-active:
-    textColor: "{colors.race-pink}"
+    textColor: "{colors.race-blue}"
   plate:
     backgroundColor: "{colors.plate}"
     rounded: "{rounded.plate}"
@@ -139,15 +138,15 @@ components:
     padding: "12px 16px"
     height: "52px"
   form-row-focus:
-    backgroundColor: "{colors.race-pink-wash}"
+    backgroundColor: "{colors.race-blue-wash}"
   race-bib:
     backgroundColor: "{colors.bib-paper}"
     textColor: "{colors.bib-ink}"
     rounded: "{rounded.bib}"
     padding: "16px 22px 0"
   race-bib-band:
-    backgroundColor: "{colors.race-pink}"
-    textColor: "{colors.on-race-pink}"
+    backgroundColor: "{colors.race-blue}"
+    textColor: "{colors.on-race-blue}"
     padding: "9px 22px"
   rack-number:
     backgroundColor: "{colors.control}"
@@ -155,8 +154,8 @@ components:
     rounded: "{rounded.tag}"
     height: "18px"
   rack-number-today:
-    backgroundColor: "{colors.race-pink}"
-    textColor: "{colors.on-race-pink}"
+    backgroundColor: "{colors.race-blue}"
+    textColor: "{colors.on-race-blue}"
   sheet:
     backgroundColor: "{colors.mat}"
     rounded: "{rounded.sheet}"
@@ -172,30 +171,31 @@ components:
 
 **Creative North Star: "Wechselzone"**
 
-The app is a triathlon transition zone at dusk. The ground is a near-black rubber mat; content sits on slightly raised charcoal plates; the week is a bike rack with seven numbered slots; every session is a latex swim cap in its sport's colour, sized by volume. The next race is a white paper start number pinned to the top of the Woche screen. One race pink marks the race, today, and whatever you can press.
+The app is a triathlon transition zone at dusk. The ground is a near-black rubber mat; content sits on slightly raised charcoal plates; the week is a bike rack with seven numbered slots; every session is a black swim cap carrying its sport's letter in white (S, R, L, K), sized by volume. The next race is a white paper start number pinned to the top of the Woche screen. One race blue marks the race, today, and whatever you can press.
 
-It is a dense, one-handed tool, not a dashboard of grey tiles. Figures are big, heavy and condensed so they read at arm's length in a gym or outdoors; prose stays in a plain sans. Surfaces are flat. Colour carries data (which sport) and intent (pink = act / now / race), never decoration. The rejected reference is the stock iOS grouped-tile dashboard with system blue.
+It is a dense, one-handed tool, not a dashboard of grey tiles. Figures are big, heavy and condensed so they read at arm's length in a gym or outdoors; prose stays in a plain sans. Surfaces are flat. Colour carries intent only (blue = act / now / race), never decoration; which sport it is reads from the letter. The rejected reference is the stock iOS grouped-tile dashboard with system blue.
 
-Dark is the default scene. A daylight variant keeps the same world on a light-grey mat with white plates, a deeper pink, and darker cap colours for contrast.
+Dark is the default scene. A daylight variant keeps the same world on a light-grey mat with white plates, and a deeper blue for contrast; the caps stay black with a white letter.
 
 **Key Characteristics:**
 - Rubber-mat ground, charcoal plates, hairline rails; no shadows at rest.
-- Four sport cap colours used only as data marks.
-- One accent, race pink, for race, today and interaction.
+- One sport mark for all four disciplines: black circle, white letter (S, R, L, K).
+- One accent, race blue, for race, today and interaction.
 - Barlow Condensed uppercase for figures and labels, Barlow for text, tabular numerals throughout.
 - Solid = done, dashed = missed, small hollow ring = still to come.
 - Portrait phone column, max 560px, thumb-zone primary action in the tab bar.
 
 ## Colors
 
-A nearly colourless mat-and-plate neutral scale, four saturated cap colours that only ever mean a sport, and a single hot pink for race, today and action.
+A nearly colourless mat-and-plate neutral scale, black-and-white sport caps, and a single saturated blue for race, today and action.
 
 ### Primary
-- **Race Pink** (race-pink): the bib's countdown band, today's rack number and Kraft weekday row, the center "+" primary action, active tab, text buttons, toggles, caret, focus ring and text selection. Text on it is the mat colour (on-race-pink), not white. Daylight: #D4106A with white text.
-- **Race Pink Wash** (race-pink-wash): 14% pink tint behind a focused form row and today's weekday row in Kraft.
+- **Race Blue** (race-blue): the bib's countdown band, today's rack number and Kraft weekday row, the center "+" primary action, active tab, text buttons, toggles, caret, focus ring and text selection. Text on it is the mat colour (on-race-blue), not white. Daylight: #2B4BD8 with white text.
+- **Race Blue Wash** (race-blue-wash): 14% blue tint behind a focused form row and today's weekday row in Kraft.
 
-### Secondary (sport caps, data only)
-- **Swim Electric Blue** (cap-swim), **Bike Safety Orange** (cap-bike), **Run Acid Lime** (cap-run), **Strength Magenta-Violet** (cap-strength). Referenced from JS through `var(--swim)` etc. They fill rack caps and sport-row dots, outline empty-sport dots (dashed), tint sport badges at 18% via `color-mix`, and border the selected sport-picker tile. Daylight values: #0070D1, #C95200, #4C8A00, #A436D1.
+### Secondary (sport caps)
+- **Cap Black** (cap-black) with **Cap Letter** (cap-letter): every discipline is the same black circle with a white letter: S Schwimmen, R Rad, L Laufen, K Kraft. Built by `sportCap()` in `utils.js` for rack caps, sport rows and list badges.
+- **Cap Ring** (cap-ring): a 1px inset ring that keeps the black circle visible on dark plates; transparent in daylight.
 
 ### Tertiary
 - **Bib Paper** (bib-paper) with **Bib Ink** (bib-ink, bib-ink-secondary): only inside the race bib plate. The bib is the one light object on the dark mat.
@@ -208,12 +208,12 @@ A nearly colourless mat-and-plate neutral scale, four saturated cap colours that
 - **Hairline** (hairline): 1px row separators, nav and tab borders, split dividers.
 - **Rail** (rail): the rack bar and hooks, future-day rings, scrollbar thumb.
 - **Chalk / Chalk Secondary / Chalk Tertiary**: primary text, meta text, inactive tabs and placeholders.
-- **Positive** (#B4F000, same as run lime) and **Destructive** (#FF5A4E, daylight #C8261B): status text; destructive appears as red text on a control plate, never a red fill.
+- **Positive** (#B4F000) and **Destructive** (#FF5A4E, daylight #C8261B): status text; destructive appears as red text on a control plate, never a red fill.
 
 ### Named Rules
-**The Caps Are Data Rule.** Sport colours appear only on marks that stand for a sport (caps, dots, badges, picker selection). Never on chrome, buttons or headings.
+**The Calm Caps Rule.** Disciplines are told apart by their letter, never by colour. No per-sport colours exist anywhere in the app: not on caps, badges, charts or the sport picker, whose selection uses race blue.
 
-**The One Pink Rule.** Race pink is the only accent. It means the race, today, or "press here". No second accent colour exists, and system blue is never used.
+**The One Blue Rule.** Race blue is the only accent. It means the race, today, or "press here". No second accent colour exists, and system blue is never used.
 
 ## Typography
 
@@ -229,7 +229,7 @@ A nearly colourless mat-and-plate neutral scale, four saturated cap colours that
 - **Figure** (700, 28px, 1, tabular): per-sport weekly value; splits use 20px/700; bib header 17px/700 uppercase.
 - **Body** (400 / 600, 16px): row titles at 600, inputs and menu items at 400. Inputs never go below 16px.
 - **Meta** (400, 13-15px): secondary row text, comparisons with last week, empty-state copy (max 280px wide).
-- **Label** (600, 15px, 0.08em, uppercase, chalk-secondary): section headings such as "WECHSELZONE", "JE DISZIPLIN", with an optional sentence-case aside at 13px on the right. Tab labels 13px/600/0.06em uppercase.
+- **Label** (600, 15px, 0.08em, uppercase, chalk-secondary): section headings such as "WOCHENÜBERSICHT", "JE DISZIPLIN", with an optional sentence-case aside at 13px on the right. The Wochenübersicht heading carries the week's total on the right as a 28px Figure, with last week's total beneath it as the aside. Tab labels 13px/600/0.06em uppercase.
 
 ### Named Rules
 **The Condensed Figures Rule.** Every number, day abbreviation and uppercase label is Barlow Condensed with tabular numerals (`.figure` utility); every sentence is Barlow, sentence case.
@@ -260,13 +260,13 @@ Square-ish plates (6px) everywhere; the paper bib is slightly sharper (4px) with
 
 ### Buttons
 - **Shape:** gently squared (6px), 48px tall, 13px 18px padding, 16px/600 text.
-- **Primary:** race-pink fill, mat-coloured text.
+- **Primary:** race-blue fill, mat-coloured text.
 - **Secondary:** control fill, chalk text. **Destructive:** control fill, destructive-red text.
-- **Text button:** pink 16px/600 without fill, 44px target; nav-bar buttons the same at 17px, "quiet" variant in chalk-secondary, disabled at 40% opacity.
-- **Focus:** 2px pink outline, 2px offset, on every focusable element.
+- **Text button:** blue 16px/600 without fill, 44px target; nav-bar buttons the same at 17px, "quiet" variant in chalk-secondary, disabled at 40% opacity.
+- **Focus:** 2px blue outline, 2px offset, on every focusable element.
 
 ### Primary action (tab-bar "+")
-A 64x46px pink block with 12px corners, centred in the tab bar between Log and Kraft. It is the only "+" in the app: each screen registers its own action and label into it (add workout, start strength session, add race, upload plan). Press scales to 0.96. It never floats over content.
+A 64x46px blue block with 12px corners, centred in the tab bar between Log and Kraft. It is the only "+" in the app: each screen registers its own action and label into it (add workout, start strength session, add race, upload plan). Press scales to 0.96. It never floats over content.
 
 ### Cards / Plates
 - **Corner Style:** 6px. **Background:** plate. **Shadow:** none. **Border:** none; rows inside are separated by 1px hairlines. **Padding:** 16px (exercise cards 14px).
@@ -276,41 +276,42 @@ Rows 56px min, 12px 16px padding, 12px gap: optional leading badge or cap, title
 
 ### Inputs / Fields
 - **Style:** iOS-settings style rows inside a plate: label left, borderless value right-aligned, 16px, unit suffix in secondary. Inside a card the group switches to the control tone so fields stay visible. Set inputs in Kraft are filled control boxes (6px, 44px).
-- **Focus:** the whole row takes the pink wash; pink caret. No input outline.
-- **Selects:** custom chevron, no native chrome. **Toggle:** 51x31 pill, pink when on.
+- **Focus:** the whole row takes the blue wash; blue caret. No input outline.
+- **Selects:** custom chevron, no native chrome. **Toggle:** 51x31 pill, blue when on. **Check:** 28px square (6px corners) with a 2px chalk-tertiary border, blue fill and mat-coloured tick when set; the whole row is the target. Used for "Geplantes Rennen".
+- **Hint:** 14px chalk-secondary line under a group. Whenever Sichern is blocked by something non-obvious, a hint says why.
 
 ### Navigation
-Nav bar: mat background with a bottom hairline, condensed uppercase title left, subtitle (dates) and icon buttons right. Tab bar: mat background, top hairline, 24px stroked icons over 13px condensed uppercase labels; inactive chalk-tertiary, active race pink.
+Nav bar: mat background with a bottom hairline, condensed uppercase title left, subtitle (dates) and icon buttons right. Tab bar: mat background, top hairline, 24px stroked icons over 13px condensed uppercase labels; inactive chalk-tertiary, active race blue.
 
 ### Sheets, menus, dialogs
 Sheets slide up from the bottom (0.32s, `cubic-bezier(0.16, 1, 0.3, 1)`), 12px top corners, 12px below the safe area, nav bar with text buttons left and right. Action menus and popovers are raised plates with Float shadow, 52px items separated by hairlines, destructive items in red. Confirm dialogs are bottom-anchored grouped buttons (12px corners, 56px items). Toast: raised plate with hairline border, fades 0.2s. All transitions are disabled under `prefers-reduced-motion`.
 
 ### Race bib (signature)
-White paper plate pinned to the top of Woche (and Rennen): uppercase race name and date in a 17px condensed header, the 96px days-to-race display figure with its unit, and a full-bleed pink band beneath with goal time and weeks/days. Empty and static variants exist.
+White paper plate pinned to the top of Woche (and Rennen): uppercase race name and date in a 17px condensed header, the 96px days-to-race display figure with its unit, and a full-bleed blue band beneath with goal time and weeks/days. Empty and static variants exist.
 
 ### Wechselzone rack (signature)
-A plate holding a 7-slot grid crossed by a 3px rail. Each slot: rack-number tag (1-7, pink for today), a 2px hook, the caps hanging below, the condensed day abbreviation underneath. Caps are circles 16-44px, sized by duration (strength by set count). Past day without session: 18px dashed ring in chalk-tertiary. Future day: 10px hollow ring in rail.
+A plate holding a 7-slot grid crossed by a 3px rail. Each slot: rack-number tag (1-7, blue for today), a 2px hook, the caps hanging below, the condensed day abbreviation underneath. Caps are black circles 24-44px with a white letter at 56% of their size, sized by duration (strength by set count). Past day without session: 18px dashed ring in chalk-tertiary. Future day: 10px hollow ring in rail.
 
 ### Sport line
-Per-sport row under "JE DISZIPLIN": 14px cap (solid if trained this week, dashed outline in the sport colour if not), name and session meta left, 28px condensed figure right with a comparison to last week to the same weekday beneath. Idle figures in chalk-tertiary.
+Per-sport row under "JE DISZIPLIN": 28px cap (solid black if trained this week; otherwise a dashed chalk-tertiary ring with the letter in chalk-tertiary), name and session meta left, 28px condensed figure right with a comparison to last week to the same weekday beneath. Idle figures in chalk-tertiary.
 
 ### Race result
-Plate with name/date header, 56px total time, meta line, and a 5-cell split grid (Swim, T1, Bike, T2, Run) with 8px caps beside the condensed split labels; missing splits in tertiary.
+Plate with name/date header, 56px total time, meta line, and a 5-cell split grid (Swim, T1, Bike, T2, Run) with condensed split labels; missing splits in tertiary.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** mark state by line form: solid filled cap = done, dashed ring = nothing logged, small hollow rail ring = still ahead.
-- **Do** use race pink for the race, today, and the thing to press, with mat-coloured text on it in dark mode.
+- **Do** use race blue for the race, today, and the thing to press, with mat-coloured text on it in dark mode.
 - **Do** set every figure in Barlow Condensed with tabular numerals, and keep body text and inputs at 16px.
 - **Do** keep touch targets at 44px or more and route each screen's main action through the single tab-bar "+".
-- **Do** use the daylight variant's darker cap and pink values in light mode; never reuse the dark-mode cap colours on white.
+- **Do** use the daylight variant's deeper blue in light mode.
 - **Do** separate rows with 1px hairlines inside a plate rather than spacing plates apart.
 
 ### Don't:
 - **Don't** build the iOS grey-tile dashboard or use system blue.
-- **Don't** colour buttons, headings or chrome with a sport colour.
-- **Don't** add a second accent colour or a pink gradient.
+- **Don't** bring back per-sport colours; the letter tells the disciplines apart.
+- **Don't** add a second accent colour or a blue gradient.
 - **Don't** put shadows on resting plates, cards, the rack or the bib.
 - **Don't** add a floating action button over content; the primary action lives in the tab bar.
 - **Don't** block browser zoom (the viewport allows scaling; keep it that way).

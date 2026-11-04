@@ -1,9 +1,18 @@
 export const SPORT_TYPES = {
-  swim: { displayName: 'Schwimmen', shortName: 'Swim', tint: 'var(--swim)', icon: 'swim', tracksDistance: true },
-  bike: { displayName: 'Rad', shortName: 'Bike', tint: 'var(--bike)', icon: 'bike', tracksDistance: true },
-  run: { displayName: 'Laufen', shortName: 'Run', tint: 'var(--run)', icon: 'run', tracksDistance: true },
-  strength: { displayName: 'Kraft', shortName: 'Kraft', tint: 'var(--strength)', icon: 'strength', tracksDistance: false },
+  swim: { displayName: 'Schwimmen', shortName: 'Swim', letter: 'S', icon: 'swim', tracksDistance: true },
+  bike: { displayName: 'Rad', shortName: 'Bike', letter: 'R', icon: 'bike', tracksDistance: true },
+  run: { displayName: 'Laufen', shortName: 'Run', letter: 'L', icon: 'run', tracksDistance: true },
+  strength: { displayName: 'Kraft', shortName: 'Kraft', letter: 'K', icon: 'strength', tracksDistance: false },
 };
+
+// Schwarzer Kreis mit weißem Buchstaben: das eine Zeichen für jede Disziplin; idle = in dieser Woche noch nichts
+export function sportCap(sportType, { size = 28, idle = false } = {}) {
+  return el('span', {
+    class: `cap sport${idle ? ' empty' : ''}`,
+    'aria-hidden': 'true',
+    style: `width:${size}px;height:${size}px;font-size:${Math.round(size * 0.56)}px`,
+  }, SPORT_TYPES[sportType].letter);
+}
 
 // Schwimmen wird in Metern gedacht, Rad und Lauf in Kilometern.
 export function formatDistance(sportType, km) {

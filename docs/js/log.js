@@ -1,4 +1,4 @@
-import { el, SPORT_TYPES, SELECTABLE_SPORTS, formatDuration, formatDistance, averagePace, formatDateShort, formatDateAbbrev, exerciseSummary, toDateInputValue } from './utils.js';
+import { el, SPORT_TYPES, SELECTABLE_SPORTS, sportCap, formatDuration, formatDistance, averagePace, formatDateShort, formatDateAbbrev, exerciseSummary, toDateInputValue } from './utils.js';
 import { icon } from './icons.js';
 import { openSheet, showActionMenu, showConfirm, showToast, durationRow, fab } from './ui.js';
 import { db, uuid } from './db.js';
@@ -11,12 +11,7 @@ export function setOnDataChanged(fn) { onDataChanged = fn; }
 export function sportBadge(sportType, { showsLabel = false, size = 36 } = {}) {
   const sport = SPORT_TYPES[sportType];
   const wrap = el('div', { class: 'sport-badge' });
-  const circle = el('div', {
-    class: 'sport-badge-icon',
-    style: `width:${size}px;height:${size}px;background:color-mix(in srgb, ${sport.tint} 18%, transparent);color:${sport.tint}`,
-    html: icon(sport.icon, { size: Math.round(size * 0.45) }),
-  });
-  wrap.append(circle);
+  wrap.append(sportCap(sportType, { size }));
   if (showsLabel) wrap.append(el('span', { style: 'font-weight:600' }, sport.displayName));
   return wrap;
 }
@@ -116,7 +111,6 @@ export function openWorkoutForm({ existingWorkout, prefill }) {
           const active = key === sportType;
           const btn = el('button', {
             class: `sport-picker-item${active ? ' active' : ''}`,
-            style: active ? `--tint:${sport.tint}` : '',
             'aria-pressed': active ? 'true' : 'false',
             onclick: () => { sportType = key; renderPicker(); applyDistanceUnit(); },
           }, [
