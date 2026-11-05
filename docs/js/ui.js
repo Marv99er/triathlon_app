@@ -131,6 +131,158 @@ export function closeActionMenu() {
   if (openMenuCleanup) { openMenuCleanup(); openMenuCleanup = null; }
 }
 
+// ---------- Reihenfolge ändern: Karte gedrückt halten oder am Griff ziehen ----------
+
+const LONG_PRESS_MS = 400;
+const HANDLE_PRESS_MS = 120;
+const MOVE_TOLERANCE_PX = 10;
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+export function enableDragReorder(card, { handle, index, rows, onMove }) {
+  let press = null;
+  let overlay = null;
+
+  function startPress(target, x, y) {
+    const onHandle = handle.contains(target);
+    // Im Feld, in dem gerade getippt wird, setzt Halten den Cursor und hebt nichts an
+    if (!onHandle && target === document.activeElement) return;
+    press = { startX: x, startY: y, y, onHandle, timer: setTimeout(lift, onHandle ? HANDLE_PRESS_MS : LONG_PRESS_MS) };
+    card.classList.add('pressing');
+  }
+
+  function cancelPress() {
+    if (!press) return;
+    clearTimeout(press.timer);
+    card.classList.remove('pressing');
+    press = null;
+  }
+
+  function lift() {
+    const { y } = press;
+    cancelPress();
+    document.activeElement?.blur();
+    overlay = openReorderOverlay(rows(), index, y, card.closest('.modal-body'));
+  }
+
+  function movePress(x, y) {
+    if (overlay) { overlay.move(y); return; }
+    if (!press) return;
+    press.y = y;
+    if (Math.hypot(x - press.startX, y - press.startY) <= MOVE_TOLERANCE_PX) return;
+    // Am Griff heißt Bewegung ziehen, überall sonst scrollen
+    if (press.onHandle) { clearTimeout(press.timer); lift(); } else cancelPress();
+  }
+
+  function endPress() {
+    if (overlay) {
+      const to = overlay.close();
+      overlay = null;
+      if (to !== index) onMove(index, to);
+    } else if (press?.onHandle) {
+      showToast('Zum Verschieben halten und ziehen');
+    }
+    cancelPress();
+  }
+
+  function abortPress() {
+    if (overlay) { overlay.close(); overlay = null; }
+    cancelPress();
+  }
+
+  card.addEventListener('touchstart', (e) => {
+    if (e.targetTouches.length > 1) { if (!overlay) cancelPress(); return; }
+    startPress(e.target, e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+  }, { passive: true });
+  // passive: false muss schon vor dem Berühren feststehen, sonst lässt sich das Scrollen auf dem iPhone nicht mehr stoppen
+  card.addEventListener('touchmove', (e) => {
+    if (overlay) e.preventDefault();
+    movePress(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+  }, { passive: false });
+  card.addEventListener('touchend', (e) => {
+    if (e.targetTouches.length) return;
+    // Ein Antippen nach dem Ablegen darf weder ein Feld fokussieren noch einen Button auslösen
+    if (overlay) e.preventDefault();
+    endPress();
+  });
+  card.addEventListener('touchcancel', abortPress);
+
+  card.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    startPress(e.target, e.clientX, e.clientY);
+    const onPointerMove = (ev) => movePress(ev.clientX, ev.clientY);
+    const onPointerUp = () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      endPress();
+    };
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+  });
+}
+
+// Karten sind oft fast bildschirmhoch. Beim Anheben klappt alles zu einer kurzen Liste zusammen,
+// in der jede Position ohne Scrollen erreichbar ist. Die Karten darunter bleiben unangetastet.
+function openReorderOverlay(rows, from, startY, scroller) {
+  const hint = el('div', { class: 'section-title reorder-hint' }, 'Ziehen und loslassen');
+  const list = el('div', { class: 'reorder-list' });
+  const overlay = el('div', { class: 'reorder-overlay' }, [hint, list]);
+  root.append(overlay);
+  scroller.style.overflow = 'hidden';
+
+  const minTop = hint.getBoundingClientRect().bottom;
+  const maxBottom = window.innerHeight - 40;
+  const rowHeight = Math.min(64, (maxBottom - minTop) / rows.length);
+  const listTop = clamp(startY - (from + 0.5) * rowHeight, minTop, maxBottom - rows.length * rowHeight);
+  list.style.top = `${listTop}px`;
+
+  const place = (row, slot) => { row.style.transform = `translateY(${slot * rowHeight}px)`; };
+  const rowEls = rows.map(({ title, meta }, i) => {
+    const row = el('div', { class: `reorder-row${i === from ? ' active' : ''}`, style: `height:${rowHeight}px` }, [
+      el('div', { class: 'reorder-plate' }, [
+        el('span', { class: 'reorder-grip', html: icon('grip', { size: 22, stroke: 3 }) }),
+        el('span', { class: 'reorder-title' }, title),
+        el('span', { class: 'reorder-meta' }, meta),
+      ]),
+    ]);
+    place(row, i);
+    list.append(row);
+    return row;
+  });
+
+  // Zählt nur die Bewegung seit dem Anheben, die Zeile springt also nie von selbst auf einen anderen Platz.
+  // Reicht der Platz bis zum Bildschirmrand nicht, genügt ein kürzerer Weg pro Position, damit jede erreichbar bleibt.
+  const lastIndex = rows.length - 1;
+  const pxPerSlotUp = from > 0 ? Math.min(rowHeight, Math.max(1, startY - minTop) / from) : rowHeight;
+  const pxPerSlotDown = from < lastIndex ? Math.min(rowHeight, Math.max(1, window.innerHeight - 16 - startY) / (lastIndex - from)) : rowHeight;
+
+  let target = from;
+  function move(y) {
+    const delta = y - startY;
+    const slot = clamp(from + delta / (delta < 0 ? pxPerSlotUp : pxPerSlotDown), -0.5, lastIndex + 0.5);
+    place(rowEls[from], slot);
+    const next = clamp(Math.round(slot), 0, lastIndex);
+    if (next === target) return;
+    target = next;
+    rowEls.forEach((row, i) => {
+      if (i === from) return;
+      if (i > from && i <= target) place(row, i - 1);
+      else if (i < from && i >= target) place(row, i + 1);
+      else place(row, i);
+    });
+  }
+  move(startY);
+
+  return {
+    move,
+    close() {
+      scroller.style.overflow = '';
+      overlay.classList.add('closing');
+      setTimeout(() => overlay.remove(), 160);
+      return target;
+    },
+  };
+}
+
 // ---------- Confirm dialog (ersetzt confirmationDialog) ----------
 
 export function showConfirm({ title, actions }) {

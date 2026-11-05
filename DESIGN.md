@@ -271,6 +271,9 @@ A 64x46px blue block with 12px corners, centred in the tab bar between Log and K
 ### Cards / Plates
 - **Corner Style:** 6px. **Background:** plate. **Shadow:** none. **Border:** none; rows inside are separated by 1px hairlines. **Padding:** 16px (exercise cards 14px).
 
+### Reordering exercises
+Every exercise card carries a 44px grip (control fill, chalk dots) left of its name. Dragging the grip or holding the card for 400ms lifts it: the screen switches to a compact list of all exercises on the mat, the lifted row is a raised plate with Float shadow and a 2px blue outline, and releasing drops it. The compact list exists because cards are often nearly screen-height. Holding inside the field being typed in stays a caret gesture. The card's menu keeps "Nach oben/unten verschieben" as the non-gesture route.
+
 ### Lists and rows
 Rows 56px min, 12px 16px padding, 12px gap: optional leading badge or cap, title 16/600, subtitle 14px secondary, trailing value and chevron in tertiary. Pressed state fills with control.
 

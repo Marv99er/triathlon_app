@@ -152,6 +152,27 @@ export function el(tag, attrs = {}, children = []) {
   return node;
 }
 
+export function parseDecimal(text) {
+  const value = parseFloat(String(text).replace(',', '.'));
+  return Number.isFinite(value) ? value : null;
+}
+
+export function formatDecimal(value) {
+  return value === null || value === undefined ? '' : String(value).replace('.', ',');
+}
+
+// Kommazahl-Feld. Kein type="number": Das meldet bei "32," einen leeren Wert, als wäre nichts eingetippt.
+export function decimalInput({ value, ...attrs } = {}) {
+  const input = el('input', { ...attrs, type: 'text', inputmode: 'decimal', autocomplete: 'off', value: formatDecimal(value) });
+  input.addEventListener('input', () => {
+    const sign = input.value.trim().startsWith('-') ? '-' : '';
+    const [whole, ...fraction] = input.value.replace(/[^\d.,]/g, '').split(/[.,]/);
+    const clean = sign + whole + (fraction.length ? `,${fraction.join('')}` : '');
+    if (clean !== input.value) input.value = clean;
+  });
+  return input;
+}
+
 export function weekdayFromDate(date) {
   // 1 = Montag ... 7 = Sonntag
   const js = date.getDay();

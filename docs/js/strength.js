@@ -1,6 +1,6 @@
-import { el, WEEKDAY_NAMES, WEEKDAY_SHORT, weekdayFromDate, startOfMonth, endOfMonth, formatMonthYear, formatDateAbbrev, formatDateShort, exerciseSummary, toDateTimeInputValue } from './utils.js';
+import { el, WEEKDAY_NAMES, WEEKDAY_SHORT, weekdayFromDate, startOfMonth, endOfMonth, formatMonthYear, formatDateAbbrev, formatDateShort, exerciseSummary, toDateTimeInputValue, decimalInput, parseDecimal, formatDecimal } from './utils.js';
 import { icon } from './icons.js';
-import { openSheet, showActionMenu, showConfirm, fab } from './ui.js';
+import { openSheet, showActionMenu, showConfirm, fab, enableDragReorder } from './ui.js';
 import { db, uuid } from './db.js';
 import { rpeText } from './log.js';
 
@@ -246,7 +246,7 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
         if (endInput.value && new Date(endInput.value) < newStart) endInput.value = toDateTimeInputValue(newStart);
       });
 
-      const bodyWeightInput = el('input', { type: 'number', step: '0.1', placeholder: 'optional', value: bodyWeightKg ?? '' });
+      const bodyWeightInput = decimalInput({ placeholder: 'optional', value: bodyWeightKg });
 
       const exercisesContainer = el('div', { style: 'display:flex;flex-direction:column;gap:14px' });
 
@@ -274,8 +274,8 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
           ]));
           ex.sets.forEach((set, si) => {
             const ghost = set.ghost;
-            const weightInput = el('input', { type: 'number', step: '0.5', placeholder: ghost?.weightKg != null ? String(ghost.weightKg) : 'kg', value: set.weightKg ?? '' });
-            const repsInput = el('input', { type: 'number', placeholder: ghost?.reps != null ? String(ghost.reps) : 'Wdh.', value: set.reps ?? '' });
+            const weightInput = decimalInput({ 'aria-label': `Gewicht Satz ${si + 1}`, placeholder: ghost?.weightKg != null ? formatDecimal(ghost.weightKg) : 'kg', value: set.weightKg });
+            const repsInput = el('input', { type: 'number', inputmode: 'numeric', 'aria-label': `Wiederholungen Satz ${si + 1}`, placeholder: ghost?.reps != null ? String(ghost.reps) : 'Wdh.', value: set.reps ?? '' });
             const onSetInput = (field) => {
               set.adopted[field] = false;
               if (ghost) {
@@ -288,11 +288,11 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
                   set.adopted = { weight: false, reps: false };
                 } else if (!set.active) {
                   set.active = true;
-                  if (field === 'reps' && !weightInput.value && ghost.weightKg != null) { weightInput.value = ghost.weightKg; set.adopted.weight = true; }
+                  if (field === 'reps' && !weightInput.value && ghost.weightKg != null) { weightInput.value = formatDecimal(ghost.weightKg); set.adopted.weight = true; }
                   if (field === 'weight' && !repsInput.value && ghost.reps != null) { repsInput.value = ghost.reps; set.adopted.reps = true; }
                 }
               }
-              set.weightKg = weightInput.value ? parseFloat(weightInput.value) : null;
+              set.weightKg = parseDecimal(weightInput.value);
               set.reps = repsInput.value ? parseInt(repsInput.value, 10) : null;
             };
             weightInput.addEventListener('input', () => onSetInput('weight'));
@@ -318,13 +318,38 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
 
         const last = lastExercise(ex.name);
 
-        return el('div', { class: 'exercise-card' }, [
-          el('div', { class: 'exercise-card-header' }, [nameField, kebabBtn]),
+        // Der Griff ist nur für die Geste da; ohne Touch oder Maus führt das Menü (Nach oben/unten) zum selben Ziel
+        const dragHandle = exercises.length > 1
+          ? el('div', { class: 'drag-handle', 'aria-hidden': 'true', html: icon('grip', { size: 24, stroke: 3 }) })
+          : null;
+
+        const card = el('div', { class: 'exercise-card' }, [
+          el('div', { class: 'exercise-card-header' }, [dragHandle, nameField, kebabBtn]),
           last ? el('div', { class: 'last-performance' }, `Zuletzt (${formatDateShort(last.date)}): ${exerciseSummary(last)}`) : null,
           setsTable,
           addSetBtn,
           notesField,
         ]);
+
+        if (dragHandle) {
+          enableDragReorder(card, {
+            handle: dragHandle,
+            index,
+            rows: () => exercises.map(e => ({
+              title: e.name.trim() || 'Übung ohne Namen',
+              meta: `${e.sets.length} ${e.sets.length === 1 ? 'Satz' : 'Sätze'}`,
+            })),
+            onMove: (from, to) => {
+              exercises.splice(to, 0, exercises.splice(from, 1)[0]);
+              renderAll();
+              const moved = exercisesContainer.children[to];
+              moved.scrollIntoView({ block: 'center' });
+              moved.classList.add('just-moved');
+            },
+          });
+        }
+
+        return card;
       }
 
       function renderAll() {
@@ -371,7 +396,7 @@ export function openStrengthSessionForm({ existingWorkout, routine, repeatFrom }
         workout.sportType = 'strength';
         workout.date = start.toISOString();
         workout.durationSeconds = durationSeconds;
-        workout.bodyWeightKg = bodyWeightInput.value ? parseFloat(bodyWeightInput.value) : null;
+        workout.bodyWeightKg = parseDecimal(bodyWeightInput.value);
         workout.rpe = rpe;
         workout.notes = notesInput.value.trim() || null;
         workout.routineName = sessionName.trim() || null;

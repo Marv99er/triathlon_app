@@ -701,10 +701,92 @@ select option { color: initial; }
   display: flex;
   flex-direction: column;
   gap: 10px;
+  /* Gedrückt halten hebt die Karte an: dabei weder Text markieren noch das iOS-Menü öffnen */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
+
+.exercise-card input { -webkit-user-select: text; user-select: text; }
+.exercise-card.pressing { transform: scale(0.985); transition: transform 0.3s ease-out 0.1s; }
+.exercise-card.just-moved { animation: just-moved 0.9s ease-out; }
+@keyframes just-moved { from { background: var(--accent-wash); } }
 
 .exercise-card-header { display: flex; align-items: center; gap: 8px; }
 .exercise-card-header input { text-align: left; font-size: 17px; font-weight: 600; }
+
+.drag-handle {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--control-bg);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: grab;
+  touch-action: none;
+}
+
+/* Kompakte Liste beim Verschieben */
+.reorder-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 115;
+  background: var(--bg);
+  animation: reorder-in 0.14s ease-out;
+  touch-action: none;
+}
+.reorder-overlay.closing { opacity: 0; transition: opacity 0.16s ease-out; }
+@keyframes reorder-in { from { opacity: 0; } }
+
+.reorder-hint { justify-content: center; padding: calc(20px + var(--safe-top)) 16px 12px; }
+
+.reorder-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: calc(100% - 32px);
+  max-width: 528px;
+  margin: 0 auto;
+}
+
+.reorder-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding-bottom: 6px;
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reorder-row.active { transition: none; z-index: 1; }
+
+.reorder-plate {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+}
+
+.reorder-row.active .reorder-plate {
+  background: var(--bg-elevated);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  transform: scale(1.03);
+  animation: reorder-pop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes reorder-pop { from { transform: scale(0.97); } }
+
+.reorder-grip { display: flex; flex: none; color: var(--text-secondary); }
+.reorder-row.active .reorder-grip { color: var(--accent); }
+.reorder-title { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reorder-meta { flex: none; font-size: 14px; color: var(--text-secondary); }
 
 .sets-table { display: flex; flex-direction: column; gap: 8px; }
 .sets-header { display: flex; gap: 8px; font-size: 13px; color: var(--text-secondary); padding: 0 2px; }
@@ -943,5 +1025,6 @@ select option { color: initial; }
 .confirm-dialog .cancel-group button { font-weight: 400; }
 
 @media (prefers-reduced-motion: reduce) {
-  .modal-sheet, .toggle, .toggle::before, .toast { transition: none; }
+  .modal-sheet, .toggle, .toggle::before, .toast, .exercise-card.pressing, .reorder-row, .reorder-overlay.closing { transition: none; }
+  .exercise-card.just-moved, .reorder-overlay, .reorder-row.active .reorder-plate { animation: none; }
 }
